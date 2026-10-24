@@ -1,0 +1,13 @@
+{
+  "identifier": "com.qingtu.validation",
+  "productName": "轻图验证",
+  "bundle": {
+    "useLocalToolsDir": true,
+    "fileAssociations": [],
+    "windows": {
+      "nsis": {
+        "installerHooks": "./windows/validation-hooks.nsh"
+      }
+    }
+  }
+}

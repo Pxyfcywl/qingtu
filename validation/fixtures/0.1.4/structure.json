@@ -1,0 +1,137 @@
+{
+  "id": "structure-54afc6c3-61a8-46ca-a59a-da3d64bd69b1",
+  "schemaVersion": 1,
+  "title": "结构操作检查",
+  "rootId": "root",
+  "revision": 0,
+  "layoutMode": "free",
+  "viewport": {
+    "x": 120,
+    "y": 100,
+    "zoom": 0.9
+  },
+  "updatedAt": 1792100484355,
+  "nodes": {
+    "root": {
+      "kind": "text",
+      "body": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "side": "right",
+      "color": "teal",
+      "contentCollapsed": false,
+      "childrenCollapsed": false,
+      "id": "root",
+      "parentId": null,
+      "title": "根节点",
+      "position": {
+        "x": 0,
+        "y": 180
+      },
+      "childIds": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "a": {
+      "kind": "text",
+      "body": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "side": "right",
+      "color": "teal",
+      "contentCollapsed": false,
+      "childrenCollapsed": false,
+      "id": "a",
+      "parentId": "root",
+      "title": "父节点 A",
+      "position": {
+        "x": 280,
+        "y": 0
+      },
+      "childIds": [
+        "x"
+      ]
+    },
+    "b": {
+      "kind": "text",
+      "body": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "side": "right",
+      "color": "teal",
+      "contentCollapsed": false,
+      "childrenCollapsed": false,
+      "id": "b",
+      "parentId": "root",
+      "title": "父节点 B",
+      "position": {
+        "x": 280,
+        "y": 220
+      },
+      "childIds": []
+    },
+    "c": {
+      "kind": "text",
+      "body": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "side": "right",
+      "color": "teal",
+      "contentCollapsed": false,
+      "childrenCollapsed": false,
+      "id": "c",
+      "parentId": "root",
+      "title": "空标题测试",
+      "position": {
+        "x": 280,
+        "y": 440
+      },
+      "childIds": []
+    },
+    "x": {
+      "kind": "text",
+      "body": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "side": "right",
+      "color": "teal",
+      "contentCollapsed": false,
+      "childrenCollapsed": false,
+      "id": "x",
+      "parentId": "a",
+      "title": "子节点 X",
+      "position": {
+        "x": 680,
+        "y": 0
+      },
+      "childIds": []
+    }
+  }
+}

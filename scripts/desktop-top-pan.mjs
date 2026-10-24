@@ -1,0 +1,36 @@
+import {spawn} from 'node:child_process';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {NativeSession,sleep} from './lib/native.mjs';
+const root=path.resolve('.tooling/top-pan',new Date().toISOString().replace(/[:.]/g,'-'));await fs.mkdir(root,{recursive:true});
+const app=path.resolve(process.env.QINGTU_TEST_APP??'.tooling/target/release/qingtu.exe'),report={status:'running',root,application:app,buildFlavor:process.env.QINGTU_TEST_FLAVOR??'production',exeSha256:crypto.createHash('sha256').update(await fs.readFile(app)).digest('hex'),checks:[]};
+const check=(ok,label)=>{if(!ok)throw Error(label);report.checks.push(label);};
+const driver=spawn(path.resolve('.tooling/webdriver/bin/tauri-driver.exe'),['--port','4472','--native-port','9572','--native-driver',path.resolve('.tooling/edgedriver/msedgedriver.exe')],{env:{...process.env,QINGTU_CONFIG_DIR:path.join(root,'config')},windowsHide:true,stdio:['ignore','inherit','inherit']});
+const session=new NativeSession('http://127.0.0.1:4472');
+const pointer=async actions=>session.request('POST',`/session/${session.id}/actions`,{actions:[{type:'pointer',id:'mouse',parameters:{pointerType:'mouse'},actions}]});
+const move=(x,y,duration=150)=>({type:'pointerMove',origin:'viewport',x:Math.round(x),y:Math.round(y),duration});
+const y=()=>session.execute('return new DOMMatrix(getComputedStyle(document.querySelector(".react-flow__viewport")).transform).m42;');
+const shot=async name=>fs.writeFile(path.join(root,name),Buffer.from(await session.request('GET',`/session/${session.id}/screenshot`),'base64'));
+const key=(value,modifiers=[])=>session.request('POST',`/session/${session.id}/actions`,{actions:[{type:'key',id:'keyboard',actions:[...modifiers.map(value=>({type:'keyDown',value})),{type:'keyDown',value},{type:'keyUp',value},...modifiers.toReversed().map(value=>({type:'keyUp',value}))]}]});
+try{
+ await sleep(800);await session.open(app);check(!(await session.native('bootstrap')).initialized,'使用独立测试资料库');await session.native('initialize_storage',{directory:path.join(root,'library')});
+ const base={kind:'text',body:{type:'doc',content:[{type:'paragraph'}]},contentCollapsed:false,childrenCollapsed:false,side:'right',color:'teal'};
+ const doc={id:crypto.randomUUID(),schemaVersion:1,title:'向上平移修复验证',rootId:'root',revision:0,layoutMode:'free',viewport:{x:80,y:180,zoom:1},updatedAt:Date.now(),nodes:{
+  root:{...base,id:'root',title:'向上平移修复验证',parentId:null,childIds:['a','b'],position:{x:0,y:0}},
+  a:{...base,id:'a',title:'父 A',parentId:'root',childIds:['c'],position:{x:600,y:0}},
+  b:{...base,id:'b',title:'发起连线 B',parentId:'root',childIds:[],position:{x:300,y:230}},
+  c:{...base,id:'c',title:'屏幕上方子 C',parentId:'a',childIds:[],position:{x:300,y:-850}}
+ }};
+ await session.native('save_document',{patch:{document:doc,upserts:Object.values(doc.nodes),removedIds:[],baseRevision:0,commandId:crypto.randomUUID()}});await session.refresh();await session.waitFor('return !!document.querySelector(".library-open-map");');await session.click('.library-open-map');await session.waitFor('return !!document.querySelector("[data-node-id=b]");');await sleep(600);await session.click('[data-node-id="b"] .node-label');await session.click('[aria-label="节点属性"]');await sleep(150);
+ const geometry=await session.execute('const r=document.querySelector(".parent-connect-point").getBoundingClientRect(),p=document.querySelector(".react-flow").getBoundingClientRect(),h=document.querySelector(".topbar").getBoundingClientRect(),t=document.querySelector(".document-tabs").getBoundingClientRect();return {source:{x:r.x+r.width/2,y:r.y+r.height/2},x:p.width/2,canvas:p.top+4,toolbar:h.y+h.height/2,tabs:t.y+t.height/2,middle:p.y+p.height/2};');
+ await session.execute('window.panEvents=[];for(const name of ["setPointerCapture","releasePointerCapture"]){const original=Element.prototype[name];Element.prototype[name]=function(id){window.panEvents.push({type:name,target:this.className,stack:new Error().stack});return original.call(this,id);};}for(const type of ["pointermove","pointerdown","pointerup","pointercancel","gotpointercapture","lostpointercapture","blur"]){window.addEventListener(type,e=>{window.panEvents.push({type,x:e.clientX,y:e.clientY,buttons:e.buttons,pointerId:e.pointerId,target:e.target.className,focused:document.hasFocus()});window.panEvents=window.panEvents.slice(-60);},true);}');
+ await pointer([move(geometry.source.x,geometry.source.y),{type:'pointerDown',button:0}]);await session.waitFor('return !!document.querySelector(".parent-connect-preview");');
+ for(const [name,at]of [['画布上沿',geometry.canvas],['顶部工具栏',geometry.toolbar],['顶部标签栏',geometry.tabs]]){await pointer([move(geometry.x,at)]);const before=await y();await pointer([{type:'pause',duration:250}]);const after=await y();(report.samples??=[]).push({name,before,after});check(after>before+45,`真实按住鼠标进入${name}后继续向上平移`);check(await session.execute('return !!document.querySelector(".parent-connect-preview");'),'拖线状态保持');}
+ await session.waitFor('const r=document.querySelector("[data-node-id=c]")?.getBoundingClientRect(),p=document.querySelector(".react-flow").getBoundingClientRect();return r&&r.top>p.top+110&&r.bottom<p.bottom-40;');await shot('顶部栏持续平移.png');
+ await pointer([move(geometry.x,geometry.middle)]);const beforeStop=await y();await sleep(200);check(Math.abs(await y()-beforeStop)<1,'移回画布中央停止平移');
+ const target=await session.execute('const r=document.querySelector("[data-node-id=c] .node-label").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};');await pointer([move(target.x,target.y),{type:'pointerUp',button:0}]);await session.waitFor('return !!document.querySelector(".additional-parent-edge")&&!!document.querySelector(".save-saved");');check((await session.native('load_document',{id:doc.id})).nodes.c.extraParentIds.includes('b'),'向上找到原本屏幕外节点后可正常连接');
+ await key('l',['\uE009','\uE008']);await session.waitFor('return !!document.querySelector(".parent-connect-preview");');await pointer([move(geometry.x,geometry.toolbar)]);const beforeClick=await y();await sleep(200);check(await y()>beforeClick+45,'点击选点模式在工具栏区域持续平移');await key('\uE00C');await session.waitFor('return !document.querySelector(".parent-connect-preview");');const afterCancel=await y();await sleep(200);check(Math.abs(await y()-afterCancel)<1,'Esc 取消后立即停止');
+ await session.close();await sleep(300);await session.open(app);await session.waitFor('return !!document.querySelector(".library-home");');await session.click('.document-tab button');await session.waitFor('return !!document.querySelector(".additional-parent-edge");');check(!await session.execute('return document.querySelector("[role=alert]")?.textContent;'),'重启后连线保留且无错误提示');report.status='passed';
+}catch(error){report.status='failed';report.error=String(error);process.exitCode=1;if(session.id){await shot('失败.png').catch(()=>{});report.diagnostics=await session.execute('return {text:document.body.innerText,events:window.panEvents};').catch(()=>null);}}
+finally{await session.close();driver.kill();await fs.writeFile(path.join(root,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}

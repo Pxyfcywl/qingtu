@@ -1,0 +1,12 @@
+const fs=require('node:fs');
+const ts=require('typescript');
+const original='vite.config.ts',copy='vite.config.next.ts';
+fs.copyFileSync(original,copy);
+let text=fs.readFileSync(copy,'utf8');
+text=text.replace('server: { port: 1420, strictPort: true }',"server: { port: 1420, strictPort: true, watch: { ignored: ['**/.tooling/**','**/tmp/**','**/output/**','**/test-results/**','**/playwright-report/**'] } }, optimizeDeps: { include: ['@tiptap/core','@tiptap/react','@tiptap/starter-kit'] }");
+fs.writeFileSync(copy,text);
+const result=ts.transpileModule(text,{reportDiagnostics:true,compilerOptions:{module:ts.ModuleKind.ESNext}});
+if(result.diagnostics?.length)throw new Error('Replacement failed syntax validation');
+fs.renameSync(original,'.tooling/config-backups/vite.config.v1.ts');
+fs.renameSync(copy,original);
+console.log('Vite config replaced after copying and checking; original retained.');

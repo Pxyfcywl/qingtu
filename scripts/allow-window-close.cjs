@@ -1,0 +1,10 @@
+const fs=require('node:fs');
+const original='src-tauri/capabilities/default.json',copy='src-tauri/capabilities/default.next.json';
+fs.copyFileSync(original,copy);
+const config=JSON.parse(fs.readFileSync(copy,'utf8'));
+if(!config.permissions.includes('core:window:allow-destroy'))config.permissions.push('core:window:allow-destroy');
+fs.writeFileSync(copy,JSON.stringify(config,null,2)+'\n');
+JSON.parse(fs.readFileSync(copy,'utf8'));
+fs.renameSync(original,'.tooling/config-backups/capabilities.v1.json');
+fs.renameSync(copy,original);
+console.log('Window close permission updated via validated copy.');

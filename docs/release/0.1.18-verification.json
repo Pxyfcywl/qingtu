@@ -1,0 +1,81 @@
+{
+  "version": "0.1.18",
+  "date": "2026-10-21",
+  "sourceSnapshotSha256": "5fa6fe4baa280e9c4f445b21bc44795b8a98e257e9d4caf63049b863b6551cb9",
+  "sourceArchive": "validation/source/0.1.18-5fa6fe4b-list-indent",
+  "sourceArchiveFilesVerified": 255,
+  "productionExeSha256": "2fe7403420c76618a6ca50006c795f41cd3d607f3ee7f7c6fca88514d6041c7c",
+  "productionBuild": "npm run tauri -- build --config src-tauri/tauri.tools.conf.json",
+  "frontendUnitTests": {
+    "passed": 58,
+    "scope": "含多级编号、非默认起点、无序列表和正文不可变检查",
+    "failed": 0
+  },
+  "browserUiTests": {
+    "passed": 74,
+    "scope": [
+      "真实 Tab/Shift+Tab 在有序列表中缩进提升，显示 1.、1.1、1.1.1",
+      "焦点保留正文、不新增导图节点，保存重开及撤销重做",
+      "首项边界、普通段落开始列表、无序列表升降级",
+      "代码 Tab 缩进、Shift+Tab 减少行首缩进，表格切格及最后增行",
+      "此前图片、Markdown 滚动、代码、表格、公式、媒体、首页、标签、删除和连线回归"
+    ],
+    "failed": 0
+  },
+  "desktop": {
+    "note": "独立应用标识与隔离资料库，保留原窗口；使用真实 Tab/Shift+Tab 检查三级列表，项目导出导入及完全退出重启后结构和编号保持。",
+    "frontendSha256AllMatched": true,
+    "report": "桌面验证.json",
+    "buildFlavor": "validation-same-frontend",
+    "validationIdentifier": "com.qingtu.validation",
+    "frontendFilesMatched": 78,
+    "status": "passed",
+    "validationExeSha256": "d4d998b1e0d8f84c4ac30170aaafc6d3dde7d236015c502cefc95e59a5e1727f",
+    "checks": [
+      "独立资料库，不操作用户窗口或导图",
+      "单击图片打开覆盖全窗口的原图预览",
+      "真实鼠标滚轮以指针所在位置放大图片",
+      "真实按住左键可拖动图片，松开后仍保持预览",
+      "滚轮反向转动可缩小图片",
+      "编辑态单击图片可放大且保留正文编辑",
+      "桌面粘贴 Markdown 代码和表格立即显示语法高亮及单元格",
+      "编辑态 Java 代码显示 VS Code 深色背景及不同语法颜色",
+      "Rust 存储保留代码语言和表格结构",
+      "阅读态 Java 代码显示 VS Code 深色背景及不同语法颜色",
+      "项目导出导入保留代码和表格",
+      "长 Markdown 正文内部可滚动且隐藏右侧滚动条",
+      "正文滚轮操作不缩放或平移画布",
+      "实际桌面长卡片底部进入编辑位置保持，工具栏浮动可用",
+      "输入写入点击的底部段落",
+      "PNG 导出包含完整长正文（高度 4414 像素）",
+      "导出后正文滚动位置恢复",
+      "真实 Tab 缩进为 1.1，焦点保留在正文",
+      "三级列表显示 1.1.1 实际编号",
+      "真实 Shift+Tab 提升一级并重新编号",
+      "列表 Tab 不会新增导图节点",
+      "项目导出导入保留真实列表层级",
+      "长 Markdown 正文内部可滚动且隐藏右侧滚动条",
+      "正文滚轮操作不缩放或平移画布",
+      "完全退出重启后可滚动浏览保留的底部内容",
+      "重启后原代码块和表格保持不变",
+      "重启后列表层级和 1.1.1 编号保留",
+      "桌面操作无错误提示"
+    ]
+  },
+  "update": {
+    "installationPerformed": false,
+    "precheckPassed": true,
+    "applicationIdentifier": "com.qingtu.mindmap",
+    "arguments": [
+      "/P",
+      "/UPDATE",
+      "/D=E:\\轻图"
+    ]
+  },
+  "fullSpecificationGatesPassed": false,
+  "limits": [
+    "本次覆盖所请求功能和回归，未重做历史完整量化验收",
+    "本次未重新运行未修改的 Rust 测试，存储由实际桌面保存、重启和项目导出导入验证",
+    "未在用户原程序目录执行安装，未新增长期内存或干净系统安装验收"
+  ]
+}

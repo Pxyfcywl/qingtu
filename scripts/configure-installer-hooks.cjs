@@ -1,0 +1,12 @@
+const fs=require('node:fs');
+const original='src-tauri/tauri.conf.json',copy='src-tauri/tauri.conf.hooks.next.json';
+const backup='.tooling/config-backups/tauri.conf.before-association-hooks.json';
+if(fs.existsSync(backup))throw Error('Backup already exists; refusing to overwrite it');
+fs.copyFileSync(original,copy);
+const config=JSON.parse(fs.readFileSync(copy,'utf8'));
+config.bundle.windows.nsis.installerHooks='./windows/hooks.nsh';
+fs.writeFileSync(copy,JSON.stringify(config,null,2)+'\n');
+const checked=JSON.parse(fs.readFileSync(copy,'utf8'));
+if(checked.bundle.windows.nsis.installMode!=='currentUser'||!fs.existsSync('src-tauri/'+checked.bundle.windows.nsis.installerHooks))throw Error('Installer hook validation failed');
+fs.renameSync(original,backup);fs.renameSync(copy,original);
+console.log('Installer hooks configured; original configuration retained in '+backup);

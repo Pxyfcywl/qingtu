@@ -1,0 +1,21 @@
+.parent-connect-point{position:absolute;right:12px;top:-9px;width:18px;height:18px;padding:0;display:grid;place-items:center;border:2px solid white;border-radius:50%;background:var(--strong);color:white;box-shadow:0 0 0 1px var(--border),0 2px 6px #264d4030;cursor:crosshair;z-index:12;touch-action:none}
+.parent-connect-point span{width:5px;height:5px;border:1px solid currentColor;border-radius:50%}
+.parent-connect-point:hover,.parent-connect-point:focus-visible{box-shadow:0 0 0 4px color-mix(in srgb,var(--branch) 28%,transparent);outline:none}
+.parent-connect-target{outline:3px solid #258d7c!important;outline-offset:5px;box-shadow:0 0 0 9px #258d7c18}
+.parent-connect-preview{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none;z-index:1002}
+.parent-connect-preview path{fill:none;stroke:#258d7c;stroke-width:2;stroke-dasharray:7 5;vector-effect:non-scaling-stroke}
+.parent-connect-preview circle{fill:#fff;stroke:#258d7c;stroke-width:2;vector-effect:non-scaling-stroke}
+.parent-connect-hint{display:flex;align-items:center;gap:15px;max-width:calc(100% - 160px);padding:9px 13px;border:1px solid #a9d6c9;border-radius:9px;background:#f5fcf9;box-shadow:0 3px 14px #2f59451c;color:#346d60;font-size:12px}
+.parent-connect-hint span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.parent-connect-hint button{flex-shrink:0;border-left:1px solid #c6ded5;padding:2px 0 2px 12px;color:#658077;font-size:11px}
+.exporting .parent-connect-point,.exporting .parent-connect-preview{display:none!important}
+.exporting .parent-connect-target{outline:0!important;box-shadow:none!important}
+.parent-connect-modes{display:flex;flex-shrink:0;gap:3px;border:1px solid #c6ded5;border-radius:6px;padding:2px;background:white}
+.parent-connect-modes button{border:0;padding:5px 7px;border-radius:4px}
+.parent-connect-modes button[aria-pressed=true]{color:#fff;background:#258d7c}
+.parent-edge-tools{position:absolute;pointer-events:all;display:flex;gap:6px;align-items:center;padding:6px 8px;border:1px solid #afd5ca;border-radius:8px;background:#fff;box-shadow:0 3px 14px #2f594524;font-size:11px;z-index:1001}
+.parent-edge-tools span{max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#648176}
+.parent-edge-tools button{white-space:nowrap;padding:5px 7px;border-radius:4px;background:#edf7f2;color:#347662}
+.parent-edge-tools button:disabled{opacity:.45;cursor:not-allowed}
+.react-flow:has(.parent-connect-preview) .parent-edge-tools,.exporting .parent-edge-tools{display:none!important}
+.exporting .react-flow__edge.selected .react-flow__edge-path{stroke-width:2.5!important}

@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-24",
+  "version": "0.1.18",
+  "sourceSnapshotSha256": "5fa6fe4baa280e9c4f445b21bc44795b8a98e257e9d4caf63049b863b6551cb9",
+  "productionSourceFilesVerified": 106,
+  "frontendUnitTests": {
+    "passed": 58,
+    "failed": 0
+  },
+  "browserUiTests": {
+    "passed": 74,
+    "failed": 0
+  },
+  "cleanDependencyInstall": "npm ci --prefer-offline",
+  "cleanInstallTargetedBrowserTests": {
+    "passed": 4,
+    "failed": 0,
+    "scope": "Formula export and real Tab/Shift+Tab list editing"
+  },
+  "frontendProductionBuild": "passed",
+  "desktop": "Existing 0.1.18 sealed installers retained, not rebuilt; historical desktop record in 0.1.18-verification.json",
+  "promo": {
+    "duration": 42.985167,
+    "width": 1920,
+    "height": 1080,
+    "bytes": 20822617,
+    "encoding": "MP4, H.264 + AAC",
+    "decodedFrames": [
+      "decoded-1.5.png",
+      "decoded-7.png",
+      "decoded-14.png",
+      "decoded-21.png",
+      "decoded-29.png",
+      "decoded-35.png",
+      "decoded-40.png"
+    ]
+  }
+}

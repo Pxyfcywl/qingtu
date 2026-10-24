@@ -1,0 +1,121 @@
+{
+  "package": "html-to-image",
+  "version": "1.11.13",
+  "source": "Project-local npm installation pinned by package-lock.json",
+  "changes": [
+    "Strip source map comments; maps are not copied",
+    "Add clearResourceCache and re-export it; all renderer logic unchanged"
+  ],
+  "files": [
+    {
+      "name": "apply-style.d.ts",
+      "originalSha256": "0f576b7c34b3f0a8a2fe6a0009d1a3bddc4d340435e80759af56b533ba24305f",
+      "vendoredSha256": "0f576b7c34b3f0a8a2fe6a0009d1a3bddc4d340435e80759af56b533ba24305f"
+    },
+    {
+      "name": "apply-style.js",
+      "originalSha256": "4196b6fe5671ab03b215a3c2e2e9bd5679d2277ba5baf34ad35830581d3aa78b",
+      "vendoredSha256": "9f34e0ce061216b1123ce0ef087808c571538e76b6ad5d2787c3fc6630f0c1ec"
+    },
+    {
+      "name": "clone-node.d.ts",
+      "originalSha256": "becd1da882df768825320fa459b9b25293589effda2adfe25bf24369d78e9daf",
+      "vendoredSha256": "becd1da882df768825320fa459b9b25293589effda2adfe25bf24369d78e9daf"
+    },
+    {
+      "name": "clone-node.js",
+      "originalSha256": "c7d5a5b734c87856cccd6c7804b33db00ccf2e856e4a2e6289db557c20546f7c",
+      "vendoredSha256": "b9d2e6e7e61ce17343db2f423f01a463e65c3fb3be36d2ccc15762380a23cf9f"
+    },
+    {
+      "name": "clone-pseudos.d.ts",
+      "originalSha256": "e4f587248d49d0ce0bed44b809c6ac31575f532cbea324120131e76f87f979a4",
+      "vendoredSha256": "e4f587248d49d0ce0bed44b809c6ac31575f532cbea324120131e76f87f979a4"
+    },
+    {
+      "name": "clone-pseudos.js",
+      "originalSha256": "ecde62e8800870485732d15b5f035ac0f434f81ff671150e86dc61dd21c59f22",
+      "vendoredSha256": "80608ad6756ee299f2012123a96a316e4b9e73dc491c553734742268e601ebdd"
+    },
+    {
+      "name": "dataurl.d.ts",
+      "originalSha256": "19a73d33287a726820d5f3f460fcdf53860d9b0df93b5e913e96eaeabe3f9164",
+      "vendoredSha256": "8f4b5b9c4acf3af5687d9e5c3399430526241d3c8351944444673e996a087437"
+    },
+    {
+      "name": "dataurl.js",
+      "originalSha256": "56604a681031b5e1be40f9b273bce304bad94ebba3946a20327cdb54fd2cc8f6",
+      "vendoredSha256": "786c6720ed91fd62b69c08d1b7fd9c21ef31f33106cf6bd3d3a8d10104668c39"
+    },
+    {
+      "name": "embed-images.d.ts",
+      "originalSha256": "afa0397e4ef2900ea6b8f69cf76eddcf6fd74fab59db8dba9fbebde319e6de83",
+      "vendoredSha256": "afa0397e4ef2900ea6b8f69cf76eddcf6fd74fab59db8dba9fbebde319e6de83"
+    },
+    {
+      "name": "embed-images.js",
+      "originalSha256": "2cdd7d96b558df8390b167cdf49cb0a5500caa52fdae7340aacb16836da9bb81",
+      "vendoredSha256": "34bbd9172f6c318bb42039d12751371b65952ade24c1169e4077c03b137a1d07"
+    },
+    {
+      "name": "embed-resources.d.ts",
+      "originalSha256": "53e62c0e29abd92964867847cce09b85a2fa9ea5895446314efe7db9022a3ffc",
+      "vendoredSha256": "53e62c0e29abd92964867847cce09b85a2fa9ea5895446314efe7db9022a3ffc"
+    },
+    {
+      "name": "embed-resources.js",
+      "originalSha256": "ead3747fefac7927d5cf5ae47273c11916cfd0c53dfad8c30dadb6c365121372",
+      "vendoredSha256": "c57ac57c3fc0b2f07e6f1be0708582b2e8167fef4536cf3e592d955f07e15d57"
+    },
+    {
+      "name": "embed-webfonts.d.ts",
+      "originalSha256": "ac4b9977202fa2751980890d2e18d39d20fd8018895d5122e13cb438ea0a19ad",
+      "vendoredSha256": "ac4b9977202fa2751980890d2e18d39d20fd8018895d5122e13cb438ea0a19ad"
+    },
+    {
+      "name": "embed-webfonts.js",
+      "originalSha256": "e69c955e86d4e9b2d551e58148190e4d2e384a11e6a8b633fdae3b08abe91cc8",
+      "vendoredSha256": "1854424f3d0494c88ef431f4334c8886fc9c650c59d809e17f2d0ce6ae954309"
+    },
+    {
+      "name": "index.d.ts",
+      "originalSha256": "bf673997a66d2225f43fe1b51cdddd497d0a8c08a990ee331457f2d017563075",
+      "vendoredSha256": "149e0621b66c6bec755d8fbce01b57123842ccc9c10102311c9f05bfc5114b46"
+    },
+    {
+      "name": "index.js",
+      "originalSha256": "196047f6d85e0c48dcdeb3aa3af73ba82d27a3ef5c6950d569b7fd7ac0807f28",
+      "vendoredSha256": "6b1b89dff3d56b7b3d6784bf9b5ff062aa41859772a2677d5447fcaa691d0403"
+    },
+    {
+      "name": "mimes.d.ts",
+      "originalSha256": "c28a887f9e8e81bec306c5fa30354d80631dba3b36297478b8663f4d9bc6ffd8",
+      "vendoredSha256": "c28a887f9e8e81bec306c5fa30354d80631dba3b36297478b8663f4d9bc6ffd8"
+    },
+    {
+      "name": "mimes.js",
+      "originalSha256": "8d6a4a9d628422ff83c661444a27ab7f72de9f2cecc23a330be2289ff2198659",
+      "vendoredSha256": "30eb48f151a4bcc506bf9ecb077897fbb7ba4a974b4bb6df41948f8d9c36d1f3"
+    },
+    {
+      "name": "types.d.ts",
+      "originalSha256": "ee09b9348d02aec6cd1cebb94c27896c10d47efa042a3fbc9c90dd6a7f6af752",
+      "vendoredSha256": "ee09b9348d02aec6cd1cebb94c27896c10d47efa042a3fbc9c90dd6a7f6af752"
+    },
+    {
+      "name": "types.js",
+      "originalSha256": "01ae2a5b120382f9a648ced7ee8507493a134f216d100fc61600c6c9738235d2",
+      "vendoredSha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+    },
+    {
+      "name": "util.d.ts",
+      "originalSha256": "ee4aa401c607115dba4d3794eb6593733e02d9314fb67d218e9dda97c464bcb4",
+      "vendoredSha256": "ee4aa401c607115dba4d3794eb6593733e02d9314fb67d218e9dda97c464bcb4"
+    },
+    {
+      "name": "util.js",
+      "originalSha256": "dca823d47be217c74cc660184030f78ee1b1f9a790e2c9d073524786f2e5de2a",
+      "vendoredSha256": "600349f13504c4511efc0c23c190b6646a2d238fca555557e6c9ec594b8cdb5c"
+    }
+  ]
+}
