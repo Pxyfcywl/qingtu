@@ -34,11 +34,11 @@
 
 ## 下载与安装
 
-前往 [v0.1.18 发布页](https://github.com/pxyfcywl/qingtu/releases/tag/v0.1.18)，下载 `轻图-0.1.18-Windows-x64-安装.exe`，按向导完成安装。首次启动时选择资料库存储位置。普通使用无需安装 Node.js、Rust 或 Python。
+前往 [v0.1.18 发布页](https://github.com/pxyfcywl/qingtu/releases/tag/v0.1.18)，下载 `qingtu-0.1.18-windows-x64-setup.exe`，按向导完成安装。首次启动时选择资料库存储位置。普通使用无需安装 Node.js、Rust 或 Python。
 
 需要 Windows x64 和 WebView2。安装器在缺少 WebView2 时需要联网下载运行时。应用尚未进行商业代码签名。
 
-已有旧版的用户可下载 `轻图-0.1.18-覆盖更新包.zip`，解压后运行 `覆盖更新.cmd`，选择原程序目录。更新前保存编辑并备份重要资料；程序目录与资料库分开存放。[详细安装与更新说明](docs/release/0.1.18-install.md)。
+已有旧版的用户可下载 `qingtu-0.1.18-update.zip`，解压后运行 `覆盖更新.cmd`，选择原程序目录。更新前保存编辑并备份重要资料；程序目录与资料库分开存放。[详细安装与更新说明](docs/release/0.1.18-install.md)。
 
 ## 从第一张导图开始
 
