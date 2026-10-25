@@ -1,0 +1,24 @@
+{
+  "version": "0.1.19",
+  "date": "2026-10-25",
+  "sourceSnapshotSha256": "7088965e6c597d7cb95e354c6dc82b7f46719953dad1bff0c430164d6c2ed1e7",
+  "unit": {
+    "passed": 58,
+    "failed": 0,
+    "command": "npm test"
+  },
+  "browser": {
+    "command": "npm run test:ui -- --reporter=json",
+    "passed": 83,
+    "failed": 0,
+    "flaky": 0,
+    "skipped": 0,
+    "durationMs": 194455.647,
+    "startTime": "2026-10-25T04:39:45.558Z"
+  },
+  "desktop": {
+    "checks": 13,
+    "status": "passed",
+    "details": "0.1.19-verification.json"
+  }
+}
