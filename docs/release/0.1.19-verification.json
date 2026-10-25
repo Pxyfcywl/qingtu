@@ -1,0 +1,56 @@
+{
+  "version": "0.1.19",
+  "date": "2026-10-25",
+  "engine": "pele@1.6.0",
+  "sourceSnapshotSha256": "7088965e6c597d7cb95e354c6dc82b7f46719953dad1bff0c430164d6c2ed1e7",
+  "build": {
+    "command": "npm run tauri -- build --bundles nsis",
+    "status": "passed"
+  },
+  "unit": {
+    "command": "npm test",
+    "passed": 58,
+    "failed": 0
+  },
+  "ui": {
+    "command": "npx playwright test tests/ui/mermaid.spec.ts tests/ui/code-theme.spec.ts tests/ui/markdown-selection.spec.ts tests/ui/list-indent.spec.ts tests/ui/markdown-editor.spec.ts",
+    "passed": 23,
+    "failed": 0,
+    "details": "界面验证.json"
+  },
+  "desktop": {
+    "status": "passed",
+    "exeSha256": "ccab1147996132d6cd121abbb71ced52b1fe3a8fcbeaf785b072376b46f33a18",
+    "checks": [
+      "使用隔离配置与资料库验证正式桌面程序",
+      "五种中文图表在真实 WebView2 本地渲染",
+      "图表放大覆盖全窗口",
+      "普通鼠标滚轮缩放图表，无需 Ctrl",
+      "图表放大后按住左键拖动平移",
+      "进入编辑仍保留完整 Mermaid 源码与预览",
+      "完成编辑恢复图表阅读",
+      "项目导出导入保留五类源码与语言属性",
+      "编辑及保存没有改变图表源码",
+      "PNG 导出包含全部图表",
+      "PNG 像素保留与阅读相同的 Mermaid 主题色",
+      "关闭重开后五类图表仍显示",
+      "桌面操作与导出无错误提示"
+    ],
+    "details": "桌面验证.json",
+    "png": {
+      "width": 4080,
+      "height": 2996,
+      "bytes": 1005616
+    },
+    "themedPixels": 20119
+  },
+  "installer": {
+    "file": "轻图-0.1.19-Windows-x64-安装.exe",
+    "sha256": "77e8e9c710b380ddfaf4b404b4f184cb3e8af4379089416980cd78d3fb5d2620"
+  },
+  "limits": [
+    "五类代表图表经过真实 WebView2 验证，未逐项验收所有图表语法。",
+    "未在用户原安装目录执行覆盖更新；更新脚本以 CheckOnly 验证参数。",
+    "沿用项目既有预览版状态，不代表历史完整量化验收已全部完成。"
+  ]
+}

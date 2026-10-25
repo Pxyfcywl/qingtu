@@ -6,17 +6,30 @@
 
 本地桌面思维导图 · 富媒体内容卡片 · Windows x64
 
-[下载 v0.1.18](https://github.com/pxyfcywl/qingtu/releases/tag/v0.1.18) · [观看宣传片](https://github.com/pxyfcywl/qingtu/releases/download/v0.1.18/qingtu-0.1.18-promo.mp4) · [反馈问题](https://github.com/pxyfcywl/qingtu/issues)
+[下载 v0.1.19](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.19) · [观看宣传片](https://github.com/pxyfcywl/qingtu/releases/download/v0.1.18/qingtu-0.1.18-promo.mp4) · [反馈问题](https://github.com/pxyfcywl/qingtu/issues)
 
 [![轻图 0.1.18 宣传片：把灵感展开，让知识连接](docs/media/promo-preview.gif)](https://github.com/pxyfcywl/qingtu/releases/download/v0.1.18/qingtu-0.1.18-promo.mp4)
 
-上方为自动播放的精华预览，点击观看 43 秒的完整宣传片（含配乐）。
+上方为 0.1.18 的功能预览，点击观看 43 秒的完整宣传片（含配乐）；新版 Mermaid 图表见下方。
 
 </div>
 
 轻图把思维导图和内容笔记放在同一张画布上。用节点梳理结构，用卡片写下推导、代码和详细笔记，把图片、公式与本地视频连接到你的思路里。
 
-**0.1.18 是本项目首次公开发布的版本。** 本地资料保存在你选择的文件夹中，日常使用无需登录账号。
+**当前版本：v0.1.19 · Mermaid 图表（2026-10-25）。** 本地资料保存在你选择的文件夹中，日常使用无需登录账号。
+
+## v0.1.19：让代码变成图表
+
+在内容卡片里写标准 Mermaid 代码，由本地打包的 **Pele 1.6.0** 绘制成 SVG。无需学习另一套图表语法，普通图表渲染不依赖联网服务。
+
+- 沿用原有代码块，语言选择 **Mermaid 图表**；也可直接粘贴完整的 Mermaid 围栏。
+- 编辑时同时显示源码与实时预览，完成编辑后直接阅读图表。
+- 支持查看源码、全窗口放大、普通滚轮缩放、左键拖动平移和 Esc 返回。
+- 保存、重新打开及项目导出保留图表源码；导图 PNG 导出保留配色并隐藏操作按钮。
+
+![Mermaid 源码与实时预览](docs/media/mermaid-editor.png)
+
+[下载可导入的五种图表示例](https://github.com/Pxyfcywl/qingtu/releases/download/v0.1.19/qingtu-0.1.19-mermaid-examples.qmap) · [查看 Markdown 示例](docs/examples/mermaid.md)
 
 ## 你可以用轻图做什么
 
@@ -24,6 +37,7 @@
 | --- | --- |
 | 思维导图 | Tab 添加子节点，Enter 添加同级节点，自动整理布局或自由拖动 |
 | 内容卡片 | 富文本、Markdown 粘贴、列表、公式、代码高亮和表格 |
+| Mermaid 图表 | 在代码块中绘制流程图、时序图、饼图、思维导图、甘特图等，源码可继续编辑 |
 | 图片与视频 | 插入图片和本地 MP4；原图预览支持按鼠标位置缩放、拖动查看 |
 | 多级列表 | 正文 Tab / Shift+Tab 调整层级，显示 `1.`、`1.1`、`1.1.1` |
 | 灵活组织 | 正文与后代分别折叠；更换父节点，或让一个节点连接多个父节点 |
@@ -34,11 +48,11 @@
 
 ## 下载与安装
 
-前往 [v0.1.18 发布页](https://github.com/pxyfcywl/qingtu/releases/tag/v0.1.18)，下载 `qingtu-0.1.18-windows-x64-setup.exe`，按向导完成安装。首次启动时选择资料库存储位置。普通使用无需安装 Node.js、Rust 或 Python。
+前往 [v0.1.19 发布页](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.19)，下载 `qingtu-0.1.19-windows-x64-setup.exe`，按向导完成安装。首次启动时选择资料库存储位置。普通使用无需安装 Node.js、Rust 或 Python。
 
 需要 Windows x64 和 WebView2。安装器在缺少 WebView2 时需要联网下载运行时。应用尚未进行商业代码签名。
 
-已有旧版的用户可下载 `qingtu-0.1.18-update.zip`，解压后运行 `覆盖更新.cmd`，选择原程序目录。更新前保存编辑并备份重要资料；程序目录与资料库分开存放。[详细安装与更新说明](docs/release/0.1.18-install.md)。
+已有旧版的用户可下载 `qingtu-0.1.19-update.zip`，解压后运行 `覆盖更新.cmd`，选择原程序目录。更新前保存编辑并备份重要资料；程序目录与资料库分开存放。[详细安装与更新说明](docs/release/0.1.19-install.md)。
 
 ## 从第一张导图开始
 
@@ -48,11 +62,30 @@
 4. 在内容卡片中插入公式、代码、表格、图片或视频；正文里的 Tab 用于列表缩进。
 5. 用顶部“布局”整理画布，通过“导出”保存 `.qmap` 项目或 PNG 图片。
 
+正文中按 **Alt+A** 可根据鼠标位置选择内容：鼠标停在代码块内时选择该代码块，停在其余正文时选择整篇正文；阅读与编辑均可使用。
+
 ![内容卡片中的代码与表格](docs/media/code-table.png)
+
+## 在卡片中插入 Mermaid 图表
+
+双击正文，点击“代码块”，把光标放进代码块后，在工具栏“代码语言”里选择 **Mermaid 图表**。输入下面的源码即可预览：
+
+```mermaid
+flowchart TD
+  A[提出想法] --> B[整理导图]
+  B --> C[实现功能]
+  C --> D{效果满意吗？}
+  D -->|满意| E[完成交付]
+  D -->|调整| C
+```
+
+也可直接粘贴包含三个英文反引号的完整 Markdown 围栏。支持的图表范围见 [Pele 官方示例](https://pele.run/examples)。Pele 使用自己的布局与配色方式，与 Mermaid.js 的外观和高级配置不完全相同；当前应用不启用图中外部链接与外部图片。
+
+![五种 Mermaid 图表在导图卡片中显示](docs/media/mermaid-overview.png)
 
 ## 从源码运行
 
-技术栈：Tauri 2、Rust、SQLite、React、TypeScript、React Flow、Tiptap、KaTeX、Vite。
+技术栈：Tauri 2、Rust、SQLite、React、TypeScript、React Flow、Tiptap、KaTeX、Pele、Vite。
 
 准备 Node.js 22 LTS（或满足 Vite 7 要求的版本）、npm、Rust stable、Visual Studio C++ Build Tools、Windows SDK 和 WebView2。依赖版本由 `package-lock.json` 与 `src-tauri/Cargo.lock` 固定。
 
@@ -74,11 +107,11 @@ npm run tauri -- build
 
 ## 发布与验证
 
-本次源码以封存的 0.1.18 为基准，生产源码指纹为 `5fa6fe4baa280e9c4f445b21bc44795b8a98e257e9d4caf63049b863b6551cb9`，与现有安装包的构建记录对应。首发整理补充了文档、宣传素材和运行测试所需样本。
+v0.1.19 在构建过程中通过 **58 项前端单元测试、23 项相关界面回归检查与 13 项正式桌面程序检查**。桌面检查使用独立资料库，覆盖五类中文图表、保存重开、源码保留、项目导入导出、滚轮缩放、拖动平移与完整 PNG 导出；导出像素检查确认主题配色保留。
 
-封版记录包括 58 项前端单元测试、74 项浏览器界面测试，以及使用独立资料库的桌面功能验证。[版本验证记录](docs/release/0.1.18-verification.json)与[源码指纹](docs/release/source-fingerprint.json)可供核对。这些检查覆盖对应功能与回归；完整性能、长期内存和干净系统安装验收尚未全部完成。
+[本版验证记录](docs/release/0.1.19-verification.json) · [本版生产源码指纹](docs/release/0.1.19-source-fingerprint.json) · [更新记录](CHANGELOG.md)
 
-宣传素材来自 0.1.18 的独立浏览器开发预览，使用演示资料，未读取个人资料库。
+本版未逐项验收全部图表类型；完整性能、长期内存和干净系统安装验收仍沿用既有未完成状态。宣传片来自 0.1.18 的演示资料，新版图表截图来自 0.1.19 的隔离桌面验证。
 
 ## 第三方组件
 

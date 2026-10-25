@@ -4,7 +4,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { Bold,Italic,List,ListOrdered,Columns2,Sigma,ImagePlus,Film,Link,Check,Code2,Table2 } from 'lucide-react';
 import { useEffect,useRef,useState } from 'react';
 import {TableKit} from '@tiptap/extension-table';
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import {DiagramCodeBlock} from './DiagramCodeBlock';
 import {lowlight} from '../domain/code-highlight';
 import {AlignedCell,AlignedHeader,FormattedPaste} from './FormattedPaste';
 import FloatingEditorTools from './FloatingEditorTools';
@@ -20,10 +20,11 @@ import {startOperation} from '../operations';
 import {importLocalMedia,importMediaFile,mediaFileKind} from '../media-import';
 import {math,MathClipboard} from './MathExtension';
 import {Video} from './VideoExtension';
-import {TextSelection} from '@tiptap/pm/state';
+import {AllSelection,TextSelection} from '@tiptap/pm/state';
 import '../styles-editor.css';
 import {revealEditorCaret} from './editor-scroll';
 import {ListNumbers} from './ListNumbers';
+import {registerMarkdownSelection} from './markdown-selection';
 
 const Columns=Node.create({name:'columns',group:'block',content:'column{2}',isolating:true,
   addAttributes(){return {ratio:{default:'1:1'}};},
@@ -56,7 +57,7 @@ export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNod
     editDocument(doc=>{doc.nodes[id].body=value;},{history:true,group:'body:'+id});last.current=encoded;dirty.current=false;
   };
   const finishEditing=()=>{const current=editorRef.current;if(!current)return;if(composing.current||current.view.composing){showError('请先确认输入法中的文字，再完成编辑');return;}try{commitDrafts();current.commands.blur();commit(current);patchState({editingId:null});}catch(error){showError(error);}};
-  const editor=useEditor({extensions:[StarterKit.configure({undoRedo:false,codeBlock:false}),CodeBlockLowlight.configure({lowlight,enableTabIndentation:true}),TableKit.configure({table:{resizable:false},tableCell:false,tableHeader:false}),AlignedCell,AlignedHeader,FormattedPaste,ListNumbers,Columns,Column,math('mathBlock',false),math('mathInline',true),MathClipboard,AssetImage,Video],
+  const editor=useEditor({extensions:[StarterKit.configure({undoRedo:false,codeBlock:false}),DiagramCodeBlock.configure({lowlight,enableTabIndentation:true}),TableKit.configure({table:{resizable:false},tableCell:false,tableHeader:false}),AlignedCell,AlignedHeader,FormattedPaste,ListNumbers,Columns,Column,math('mathBlock',false),math('mathInline',true),MathClipboard,AssetImage,Video],
     content:body,autofocus:false,editorProps:{attributes:{class:'rich-doc editor-content nodrag nopan nowheel'},
       handleScrollToSelection(view){const rect=revealEditorCaret(view);window.dispatchEvent(new CustomEvent('qingtu-reveal-caret',{detail:{docId:originDoc.current,rect}}));return true;},
       handleKeyDown(_view,event){
@@ -93,6 +94,29 @@ export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNod
     onUpdate({editor}) {dirty.current=true;if(!composing.current&&!editor.view.composing)try{commit(editor);}catch(error){showError(error);}},
   },[id]);
   editorRef.current=editor;
+  useEffect(()=>{
+    if(!editor)return;
+    let remove:(()=>void)|undefined;
+    // EditorContent mounts the view after render, including StrictMode remounts.
+    const frame=requestAnimationFrame(()=>{if(editor.isDestroyed)return;
+      remove=registerMarkdownSelection(editor.view.dom,code=>{
+        if(editor.isDestroyed||editor.view.composing)return;
+        const {doc,tr}=editor.state;
+        if(code){
+          const position=doc.resolve(editor.view.posAtDOM(code.querySelector('code')??code,0));
+          for(let depth=position.depth;depth>0;depth--){
+            if(position.node(depth).type.name!=='codeBlock')continue;
+            editor.view.dispatch(tr.setSelection(TextSelection.create(doc,position.start(depth),position.end(depth))));
+            editor.view.focus();return;
+          }
+          return;
+        }
+        editor.view.dispatch(tr.setSelection(new AllSelection(doc)));
+        editor.view.focus();
+      });
+    });
+    return()=>{cancelAnimationFrame(frame);remove?.();};
+  },[editor]);
   useEffect(()=>{
     if(!editor)return;const frame=requestAnimationFrame(()=>{if(editor.isDestroyed)return;
       const pane=editor.view.dom.closest('.card-body');if(pane)pane.scrollTop=entryScroll;
@@ -144,7 +168,7 @@ export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNod
       {button('无序列表',<List size={16}/>,()=>editor.chain().focus().toggleBulletList().run())}
       {button('有序列表',<ListOrdered size={16}/>,()=>editor.chain().focus().toggleOrderedList().run())}
       {button('代码块',<Code2 size={16}/>,()=>editor.chain().focus().toggleCodeBlock().run(),editor.isActive('codeBlock'))}
-      {editor.isActive('codeBlock')&&<select aria-label="代码语言" value={editor.getAttributes('codeBlock').language??''} onChange={event=>editor.chain().focus().updateAttributes('codeBlock',{language:event.target.value||null}).run()}><option value="">自动识别语言</option>{lowlight.listLanguages().map(language=><option key={language} value={language}>{language}</option>)}</select>}
+      {editor.isActive('codeBlock')&&<select aria-label="代码语言" value={editor.getAttributes('codeBlock').language??''} onChange={event=>editor.chain().focus().updateAttributes('codeBlock',{language:event.target.value||null}).run()}><option value="">自动识别语言</option><option value="mermaid">Mermaid 图表</option>{lowlight.listLanguages().map(language=><option key={language} value={language}>{language}</option>)}</select>}
       {button('插入表格',<Table2 size={16}/>,()=>editor.chain().focus().insertTable({rows:3,cols:3,withHeaderRow:true}).run())}
       {editor.isActive('table')&&<><button onClick={()=>editor.chain().focus().addRowAfter().run()}>加行</button><button onClick={()=>editor.chain().focus().addColumnAfter().run()}>加列</button><button onClick={()=>editor.chain().focus().deleteTable().run()}>移除表格</button></>}
       {button('插入公式',<Sigma size={16}/>,()=>editor.chain().focus().insertContent({type:'mathBlock',attrs:{latex:''}}).run())}
@@ -156,6 +180,6 @@ export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNod
       {button('完成编辑',<Check size={16}/>,finishEditing)}
     </FloatingEditorTools>
     <EditorContent editor={editor}/>
-    <div className="editor-hint">列表：Tab 缩进 / Shift+Tab 提升 · 支持代码、表格、公式和图片 · 点击图片放大 · Esc 完成编辑</div>
+    <div className="editor-hint">代码块可选择 Mermaid 图表，或粘贴 ```mermaid 围栏代码 · 列表 Tab 缩进 / Shift+Tab 提升 · Esc 完成编辑</div>
   </div>;
 }

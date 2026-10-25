@@ -11,3 +11,9 @@ tmp/
 .DS_Store
 .env
 .env.*
+
+# Local deliveries, source snapshots, and unrelated projects
+releases/
+validation/source/
+output/
+minimind-sft/

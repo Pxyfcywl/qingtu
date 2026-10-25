@@ -15,6 +15,7 @@ import {version as appVersion} from '../package.json';
 import DefaultNodeKind from './components/DefaultNodeKind';
 import ParentsEditor from './components/ParentsEditor';
 import ImageViewer from './components/ImageViewer';
+import {installMarkdownSelection} from './components/markdown-selection';
 
 function Button({title,children,onClick,disabled=false,className=''}:{title:string;children:React.ReactNode;onClick:()=>void;disabled?:boolean;className?:string}) {
   return <button className={`tool-button ${className}`} title={title} aria-label={title} onClick={onClick} disabled={disabled}>{children}</button>;
@@ -29,6 +30,7 @@ export default function App() {
   const conversionDialog=useRef<HTMLDialogElement>(null);
   useEffect(()=>{const dialog=conversionDialog.current;if(!pendingConversion||!dialog)return;dialog.showModal();dialog.querySelector<HTMLButtonElement>('.secondary-button')?.focus();return()=>{if(dialog.open)dialog.close();};},[pendingConversion]);
   const compositionActive=useRef(false);
+  useEffect(()=>installMarkdownSelection(()=>!!getState().busy||compositionActive.current),[]);
   useEffect(()=>registerDraft('window-input',{commit:()=>{},composing:()=>compositionActive.current}),[]);
   const onMedia=useCallback((id:string)=>void replaceMedia(id),[]);
   async function openInitial(info:LibraryInfo) {

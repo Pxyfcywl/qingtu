@@ -1,0 +1,22 @@
+.diagram-block{margin:12px 0;border:1px solid #d6e5e1;border-radius:9px;background:#fff;overflow:hidden;cursor:default}
+.diagram-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 10px;background:#f1f7f5;border-bottom:1px solid #e1ece8;color:#557269;font-size:11px;line-height:1.5;user-select:none}
+.diagram-tools button{padding:4px 8px;border-radius:5px;color:#23796e;background:#fff;white-space:nowrap}
+.diagram-tools button:hover{background:#e0f0e9}
+.diagram-surface{--pele-bg:#fff;--pele-fg:#304756;--pele-muted:#7b8c92;--pele-line:#627c87;--pele-surface:#f1f8f5;--pele-surface-alt:#e8f1f6;--pele-border:#c4d8d0;--pele-accent:#208c7d;--pele-error:#a7473a;--pele-font:"Microsoft YaHei",sans-serif;--pele-series-1:#42a892;--pele-series-2:#6d9edb;--pele-series-3:#e6ab66;--pele-series-4:#b08bcf;--pele-series-5:#d9879a;width:100%;min-width:0;padding:12px;overflow:auto;line-height:1.5;background:#fff;color:#304756;font-size:12px}
+.diagram-surface>svg{display:block;margin:auto;max-width:100%;height:auto}
+.diagram-source{border-top:1px solid #e1ece8;font-size:11px}
+.diagram-source summary{padding:6px 10px;color:#6c827c;cursor:pointer;user-select:none}
+.rich-doc .diagram-source pre{margin:0;border:0;border-radius:0}
+.editor-code-block{min-width:0}
+.editor-code-block>pre{margin:10px 0}
+.editor-code-block.has-diagram>pre{margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.diagram-editor-preview{margin-top:0;border-top:0;border-top-left-radius:0;border-top-right-radius:0}
+.diagram-editor-preview[hidden]{display:none}
+.diagram-viewer{position:fixed;inset:0;margin:0;padding:0;width:100vw;height:100dvh;max-width:none;max-height:none;border:0;border-radius:0;background:#fff;display:flex;flex-direction:column;color:#304756}
+.diagram-viewer::backdrop{background:#263b47d9}
+.diagram-viewer-tools{display:flex;align-items:center;gap:20px;padding:12px 24px;border-bottom:1px solid #d6e5e1;background:#f1f7f5;flex-shrink:0}
+.diagram-viewer-tools strong{margin-right:auto;font-size:15px}
+.diagram-viewer-tools span{color:#72887f;font-size:12px}
+.diagram-viewer-tools button{padding:7px 15px;background:#fff;border:1px solid #d6e5e1;border-radius:6px}
+.diagram-viewer-stage{flex:1;min-height:0;position:relative;overflow:hidden;touch-action:none;padding:24px}
+.exporting .diagram-tools,.exporting .diagram-source{display:none!important}

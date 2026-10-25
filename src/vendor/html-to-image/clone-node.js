@@ -107,6 +107,13 @@ function cloneCSSStyle(nativeNode, clonedNode, options) {
             targetStyle.setProperty(name, value, sourceStyle.getPropertyPriority(name));
         });
     }
+    // SVG children are copied as a subtree. Preserve Pele's inherited theme
+    // variables on its root so the detached export keeps the same colors.
+    if (isSVGElement(nativeNode) && nativeNode.classList.contains('pele')) {
+        Array.from(sourceStyle).filter(name => name.startsWith('--')).forEach(name => {
+            targetStyle.setProperty(name, sourceStyle.getPropertyValue(name));
+        });
+    }
 }
 function cloneInputValue(nativeNode, clonedNode) {
     if (isInstanceOfElement(nativeNode, HTMLTextAreaElement)) {
