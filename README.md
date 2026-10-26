@@ -6,7 +6,7 @@
 
 本地桌面思维导图 · 富媒体内容卡片 · Windows x64
 
-[下载 v0.1.19](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.19) · [观看宣传片](https://github.com/pxyfcywl/qingtu/releases/download/v0.1.18/qingtu-0.1.18-promo.mp4) · [反馈问题](https://github.com/pxyfcywl/qingtu/issues)
+[下载 v0.1.20](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.20) · [观看宣传片](https://github.com/pxyfcywl/qingtu/releases/download/v0.1.18/qingtu-0.1.18-promo.mp4) · [反馈问题](https://github.com/pxyfcywl/qingtu/issues)
 
 [![轻图 0.1.18 宣传片：把灵感展开，让知识连接](docs/media/promo-preview.gif)](https://github.com/pxyfcywl/qingtu/releases/download/v0.1.18/qingtu-0.1.18-promo.mp4)
 
@@ -16,9 +16,21 @@
 
 轻图把思维导图和内容笔记放在同一张画布上。用节点梳理结构，用卡片写下推导、代码和详细笔记，把图片、公式与本地视频连接到你的思路里。
 
-**当前版本：v0.1.19 · Mermaid 图表（2026-10-25）。** 本地资料保存在你选择的文件夹中，日常使用无需登录账号。
+**当前版本：v0.1.20 · 图表拖动修复（2026-10-26）。** 本地资料保存在你选择的文件夹中，日常使用无需登录账号。
 
-## v0.1.19：让代码变成图表
+## v0.1.20：修复放大图表后的拖动
+
+修复全窗口预览在初始比例下无法直接拖动的问题。现在可在图形或空白区域按住左键平移，无需先缩放；超长图放大后也可连续拖到最底部，再回到顶部。
+
+- 滚轮以鼠标位置缩放；松开左键后停止移动。
+- 提供缩小、放大、当前缩放比例和“适应窗口”。
+- 已在 Windows 中验证 81 个节点、放大后约 14,783 像素高的纵向图，保持放大比例拖到最后节点并返回顶部。
+
+![超长图放大后仍可拖到最后的步骤 81](docs/media/mermaid-long-bottom.png)
+
+[查看超长图测试示例](docs/examples/mermaid-long.md)
+
+## Mermaid 图表：让代码变成图表
 
 在内容卡片里写标准 Mermaid 代码，由本地打包的 **Pele 1.6.0** 绘制成 SVG。无需学习另一套图表语法，普通图表渲染不依赖联网服务。
 
@@ -29,7 +41,7 @@
 
 ![Mermaid 源码与实时预览](docs/media/mermaid-editor.png)
 
-[下载可导入的五种图表示例](https://github.com/Pxyfcywl/qingtu/releases/download/v0.1.19/qingtu-0.1.19-mermaid-examples.qmap) · [查看 Markdown 示例](docs/examples/mermaid.md)
+[下载可导入的五种图表示例](https://github.com/Pxyfcywl/qingtu/releases/download/v0.1.20/qingtu-0.1.20-mermaid-examples.qmap) · [查看 Markdown 示例](docs/examples/mermaid.md)
 
 ## 你可以用轻图做什么
 
@@ -48,11 +60,11 @@
 
 ## 下载与安装
 
-前往 [v0.1.19 发布页](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.19)，下载 `qingtu-0.1.19-windows-x64-setup.exe`，按向导完成安装。首次启动时选择资料库存储位置。普通使用无需安装 Node.js、Rust 或 Python。
+前往 [v0.1.20 发布页](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.20)，下载 `qingtu-0.1.20-windows-x64-setup.exe`，按向导完成安装。首次启动时选择资料库存储位置。普通使用无需安装 Node.js、Rust 或 Python。
 
 需要 Windows x64 和 WebView2。安装器在缺少 WebView2 时需要联网下载运行时。应用尚未进行商业代码签名。
 
-已有旧版的用户可下载 `qingtu-0.1.19-update.zip`，解压后运行 `覆盖更新.cmd`，选择原程序目录。更新前保存编辑并备份重要资料；程序目录与资料库分开存放。[详细安装与更新说明](docs/release/0.1.19-install.md)。
+已有旧版的用户可下载 `qingtu-0.1.20-update.zip`，解压后运行 `覆盖更新.cmd`，选择原程序目录。更新前保存编辑并备份重要资料；程序目录与资料库分开存放。[详细安装与更新说明](docs/release/0.1.20-install.md)。
 
 ## 从第一张导图开始
 
@@ -107,13 +119,13 @@ npm run tauri -- build
 
 ## 发布与验证
 
-v0.1.19 在构建过程中通过 **58 项前端单元测试、23 项相关界面回归检查与 13 项正式桌面程序检查**。桌面检查使用独立资料库，覆盖五类中文图表、保存重开、源码保留、项目导入导出、滚轮缩放、拖动平移与完整 PNG 导出；导出像素检查确认主题配色保留。
+v0.1.20 通过 **58 项单元测试、87 项完整浏览器界面测试和 21 项独立桌面检查**。界面测试无失败、跳过或重试通过的用例。新增回归按节点实际屏幕位移验收，并验证超长图放大后可往返两端。
 
-[本版验证记录](docs/release/0.1.19-verification.json) · [本版生产源码指纹](docs/release/0.1.19-source-fingerprint.json) · [更新记录](CHANGELOG.md)
+桌面验证使用独立应用标识与隔离资料库；验证构建和正式构建的 80 个前端文件逐一核对 SHA256，全部一致。
 
-公开发布前再次通过 **58 项单元测试和完整的 83 项浏览器界面测试**，无失败、跳过或重试通过的用例。[发布前完整回归记录](docs/release/0.1.19-publication-verification.json)。
+[本版验证记录](docs/release/0.1.20-verification.json) · [本版生产源码指纹](docs/release/0.1.20-source-fingerprint.json) · [更新记录](CHANGELOG.md)
 
-本版未逐项验收全部图表类型；完整性能、长期内存和干净系统安装验收仍沿用既有未完成状态。宣传片来自 0.1.18 的演示资料，新版图表截图来自 0.1.19 的隔离桌面验证。
+完整性能、长期内存和干净系统安装验收仍沿用既有未完成状态。宣传片来自 0.1.18 的演示资料，新版截图来自隔离桌面验证。
 
 ## 第三方组件
 

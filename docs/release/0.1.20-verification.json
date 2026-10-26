@@ -1,0 +1,79 @@
+{
+  "version": "0.1.20",
+  "date": "2026-10-26",
+  "engine": "pele@1.6.0",
+  "sourceSnapshotSha256": "bda889972decd569121286fc74edf251c32a5e8bc6786b25182e809649358941",
+  "unit": {
+    "passed": 58,
+    "failed": 0
+  },
+  "ui": {
+    "passed": 87,
+    "failed": 0,
+    "flaky": 0,
+    "skipped": 0,
+    "durationMs": 221133.96600000001
+  },
+  "desktop": {
+    "buildFlavor": "validation",
+    "exeSha256": "0573dac001f2114142be1ff021114d16e82b365bb7efb8fa799efa3805e2f8ab",
+    "checks": [
+      "使用隔离配置与资料库验证桌面程序",
+      "五种中文图表在真实 WebView2 本地渲染",
+      "图表放大覆盖全窗口",
+      "初次打开无需先缩放，拖动图形后节点实际移动 120×70 像素",
+      "拖动空白区域也可平移图表，节点实际移动 -80×-50 像素",
+      "普通鼠标滚轮实际放大 SVG，无需 Ctrl",
+      "缩放后拖动仍按鼠标距离移动 100×60 像素",
+      "松开左键后移动鼠标不再移动图表",
+      "适应窗口恢复最初位置和缩放",
+      "进入编辑仍保留完整 Mermaid 源码与预览",
+      "完成编辑恢复图表阅读",
+      "项目导出导入保留五类源码与语言属性",
+      "编辑及保存没有改变图表源码",
+      "PNG 导出包含全部图表",
+      "PNG 像素保留与阅读相同的 Mermaid 主题色",
+      "关闭重开后五类图表仍显示",
+      "桌面操作与导出无错误提示",
+      "81 个节点的纵向图放大到超过窗口高度四倍",
+      "连续拖动后，最后一个节点（步骤 81）完整进入窗口并可命中",
+      "继续反向拖动可回到第一个节点（步骤 1）",
+      "长图移动到两端时保持放大比例，不自动缩小"
+    ],
+    "longDiagram": {
+      "nodes": 81,
+      "svgHeight": 14782.955078125,
+      "stageHeight": 784.4000244140625,
+      "gestures": {
+        "N80": 17,
+        "N0": 35
+      }
+    },
+    "png": {
+      "width": 4080,
+      "height": 2996,
+      "bytes": 1006077
+    },
+    "themedPixels": 20119
+  },
+  "frontendComparison": {
+    "identical": true,
+    "files": 80,
+    "method": "Per-file SHA256 comparison of validation and production frontend builds"
+  },
+  "productionExeSha256": "94f9d7f65e28cf143c32430e77f912778b321a6ba12925defaa8d10176c7e0b5",
+  "installer": {
+    "file": "qingtu-0.1.20-windows-x64-setup.exe",
+    "sha256": "fdd7a71f95a9bd02a4370ecbbf66db5f2e2dde0a4309a2b031f08dc91d2e863e"
+  },
+  "regression": {
+    "oldDefaultDragObservedX": 0,
+    "newDefaultDragExpectedX": 120,
+    "coverage": "Initial fit, zoomed, blank-area dragging, pointer release, fit reset, wide diagram and both ends of an 81-node vertical diagram"
+  },
+  "limits": [
+    "桌面验证使用独立应用标识与隔离资料库；其全部前端文件与正式构建逐一核对 SHA256 相同。",
+    "未在用户原安装目录运行覆盖安装；用户原程序与资料库保留。",
+    "完整性能、长期内存与干净系统安装验收不属于本次修复范围。"
+  ]
+}

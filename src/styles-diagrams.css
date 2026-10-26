@@ -17,6 +17,11 @@
 .diagram-viewer-tools{display:flex;align-items:center;gap:20px;padding:12px 24px;border-bottom:1px solid #d6e5e1;background:#f1f7f5;flex-shrink:0}
 .diagram-viewer-tools strong{margin-right:auto;font-size:15px}
 .diagram-viewer-tools span{color:#72887f;font-size:12px}
+.diagram-viewer-percent{min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
 .diagram-viewer-tools button{padding:7px 15px;background:#fff;border:1px solid #d6e5e1;border-radius:6px}
-.diagram-viewer-stage{flex:1;min-height:0;position:relative;overflow:hidden;touch-action:none;padding:24px}
+.diagram-viewer-stage{flex:1;min-height:0;position:relative;overflow:hidden;touch-action:none;padding:0;cursor:grab;user-select:none}
+.diagram-viewer-stage.is-dragging{cursor:grabbing}
+.diagram-viewer-content{position:absolute;left:50%;top:50%;transform-origin:center;will-change:transform;pointer-events:auto}
+.diagram-viewer-content>svg.pele{display:block;width:100%;height:100%;max-width:none;margin:0;cursor:inherit}
+.diagram-viewer-message{position:absolute;inset:24px;display:grid;place-items:center;white-space:pre-wrap;overflow:auto;cursor:default}
 .exporting .diagram-tools,.exporting .diagram-source{display:none!important}

@@ -28,12 +28,13 @@ test('Mermaid 围栏粘贴、实时预览、源码保存重载及放大',async({
   await card.getByRole('button',{name:'放大图表'}).click();
   const dialog=page.getByRole('dialog',{name:'Mermaid 图表预览'});
   await expect(dialog.locator('svg.pele')).toHaveCount(1);await expect(dialog).toContainText('提出想法');
-  const svg=dialog.locator('svg.pele'),before=await svg.getAttribute('viewBox');
+  const svg=dialog.locator('svg.pele'),before=(await svg.boundingBox())!;
   await dialog.locator('.diagram-viewer-stage').hover();await page.mouse.wheel(0,-300);
-  await expect(svg).not.toHaveAttribute('viewBox',before!);
-  const zoomed=await svg.getAttribute('viewBox');
+  await expect.poll(async()=>(await svg.boundingBox())!.width).toBeGreaterThan(before.width);
+  const zoomed=(await svg.boundingBox())!;
   await page.mouse.move(650,350);await page.mouse.down();await page.mouse.move(750,410,{steps:5});await page.mouse.up();
-  await expect(svg).not.toHaveAttribute('viewBox',zoomed!);
+  const moved=(await svg.boundingBox())!;
+  expect(moved.x-zoomed.x).toBeCloseTo(100,0);expect(moved.y-zoomed.y).toBeCloseTo(60,0);
   await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);
   await card.locator('summary').click();await expect(card.locator('pre code')).toHaveText(flow);
   await card.getByRole('button',{name:'编辑卡片正文'}).click();await expect(area.locator('pre code')).toHaveText(flow);

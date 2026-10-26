@@ -1,6 +1,6 @@
 [package]
 name = "qingtu"
-version = "0.1.19"
+version = "0.1.20"
 description = "轻图 本地思维导图"
 authors = ["Qingtu"]
 edition = "2021"

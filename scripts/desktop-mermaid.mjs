@@ -5,11 +5,13 @@ import crypto from 'node:crypto';
 import {isDeepStrictEqual} from 'node:util';
 import {NativeSession,sleep} from './lib/native.mjs';
 import {checkDiagramZoom,installDiagramExportAudit} from './lib/diagram-checks.mjs';
+import {checkLongDiagramPan} from './lib/long-diagram-checks.mjs';
 
-const output=path.resolve('releases/0.1.19'),root=path.resolve('.tooling/mermaid-0.1.19',new Date().toISOString().replace(/[:.]/g,'-'));
+const version=JSON.parse(await fs.readFile('package.json','utf8')).version;
+const output=path.resolve('releases',version),root=path.resolve('.tooling','mermaid-'+version,new Date().toISOString().replace(/[:.]/g,'-'));
 await fs.mkdir(root,{recursive:true});await fs.mkdir(output,{recursive:true});
-const app=path.resolve('.tooling/target/release/qingtu.exe');
-const report={status:'running',root,app,exeSha256:crypto.createHash('sha256').update(await fs.readFile(app)).digest('hex'),checks:[]};
+const app=path.resolve(process.env.QINGTU_TEST_APP??'.tooling/target/release/qingtu.exe');
+const report={status:'running',root,app,buildFlavor:process.env.QINGTU_BUILD_FLAVOR??'validation',exeSha256:crypto.createHash('sha256').update(await fs.readFile(app)).digest('hex'),checks:[]};
 const check=(ok,label)=>{if(!ok)throw Error(label);report.checks.push(label);};
 const samples=[
  ['流程图','flowchart LR\n A[提出想法] --> B{技术可行？}\n B -->|可行| C[制作下一版]\n B -->|调整| A\n C --> D[试用反馈]'],
@@ -20,7 +22,7 @@ const samples=[
 ];
 const p=text=>({type:'paragraph',content:[{type:'text',text}]}),block=source=>({type:'codeBlock',attrs:{language:'mermaid'},content:[{type:'text',text:source}]});
 const base={kind:'text',body:{type:'doc',content:[{type:'paragraph'}]},contentCollapsed:false,childrenCollapsed:false,side:'right',color:'teal'};
-const doc={id:crypto.randomUUID(),schemaVersion:1,title:'Mermaid 图表体验 · 0.1.19',rootId:'root',revision:0,layoutMode:'free',viewport:{x:50,y:80,zoom:.7},updatedAt:Date.now(),nodes:{}};
+const doc={id:crypto.randomUUID(),schemaVersion:1,title:'Mermaid 图表体验 · '+version,rootId:'root',revision:0,layoutMode:'free',viewport:{x:50,y:80,zoom:.7},updatedAt:Date.now(),nodes:{}};
 doc.nodes.root={...base,id:'root',title:'Mermaid 图表体验',parentId:null,childIds:samples.map((_,i)=>'diagram-'+i),position:{x:0,y:300}};
 samples.forEach(([title,source],i)=>{const id='diagram-'+i;doc.nodes[id]={...base,id,kind:'card',title,parentId:'root',childIds:[],position:{x:300+i%3*570,y:Math.floor(i/3)*800},preferredWidth:520,color:['teal','blue','purple','orange','rose'][i],body:{type:'doc',content:[p('编辑：代码块 → 语言选择 Mermaid 图表。也可直接粘贴围栏代码。'),block(source)]}};});
 await fs.writeFile(path.join(output,'Mermaid图表示例.md'),'# Mermaid 图表示例\n\n直接复制带围栏的代码粘贴到轻图正文；也可新建代码块并选择 Mermaid 图表。\n\n'+samples.map(([title,source])=>'## '+title+'\n\n```mermaid\n'+source+'\n```').join('\n\n')+'\n');
@@ -28,7 +30,7 @@ const driver=spawn(path.resolve('.tooling/webdriver/bin/tauri-driver.exe'),['--p
 const session=new NativeSession('http://127.0.0.1:4475');
 const shot=async name=>fs.writeFile(path.join(output,name),Buffer.from(await session.request('GET',`/session/${session.id}/screenshot`),'base64'));
 try{
- await sleep(800);await session.open(app);check(!(await session.native('bootstrap')).initialized,'使用隔离配置与资料库验证正式桌面程序');
+ await sleep(800);await session.open(app);check(!(await session.native('bootstrap')).initialized,'使用隔离配置与资料库验证桌面程序');
  await session.native('initialize_storage',{directory:path.join(root,'library')});
  await session.native('save_document',{patch:{document:doc,upserts:Object.values(doc.nodes),removedIds:[],baseRevision:0,commandId:crypto.randomUUID()}});
  await session.refresh();await session.waitFor('return !!document.querySelector(".library-open-map");');await session.click('.library-open-map');
@@ -36,7 +38,7 @@ try{
  check(true,'五种中文图表在真实 WebView2 本地渲染');await shot('图表导图预览.png');
  await session.execute('document.querySelector(".diagram-tools button").click();');await session.waitFor('return !!document.querySelector(".diagram-viewer svg.pele");');
  check(await session.execute('const r=document.querySelector(".diagram-viewer").getBoundingClientRect();return Math.abs(r.width-innerWidth)<2&&Math.abs(r.height-innerHeight)<2;'),'图表放大覆盖全窗口');
- await shot('图表全窗口预览.png');await checkDiagramZoom(session,check);await session.click('[aria-label="关闭图表预览"]');
+ await shot('图表全窗口预览.png');await checkDiagramZoom(session,check,shot);await session.click('[aria-label="关闭图表预览"]');
  const original=await session.execute('return document.querySelector(".react-flow__viewport").style.transform;');
  await session.execute('document.querySelector("[data-node-id=diagram-0] [aria-label=编辑卡片正文]").click();');
  await session.waitFor('return !!document.querySelector("[contenteditable=true] .diagram-surface svg.pele");');
@@ -58,6 +60,7 @@ try{
  await session.refresh();await session.waitFor('return !!document.querySelector(".library-open-map");');await session.execute('Array.from(document.querySelectorAll(".library-open-map")).find(el=>el.textContent.includes(arguments[0])).click();',[doc.title]);
  await session.waitFor('return document.querySelectorAll(".diagram-surface svg.pele").length===5;');check(true,'关闭重开后五类图表仍显示');
  check(!(await session.execute('return document.querySelector("[role=alert]")?.textContent;')),'桌面操作与导出无错误提示');
+ report.longDiagram=await checkLongDiagramPan(session,{check,shot,output});
  report.png={width:bytes.readUInt32BE(16),height:bytes.readUInt32BE(20),bytes:bytes.length};report.status='passed';
 }catch(error){report.status='failed';report.error=String(error);process.exitCode=1;if(session.id){await shot('桌面失败现场.png').catch(()=>{});report.html=await session.execute('return document.body.innerText;').catch(()=>null);}}
 finally{await session.close();driver.kill();await fs.writeFile(path.join(output,'桌面验证.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}
