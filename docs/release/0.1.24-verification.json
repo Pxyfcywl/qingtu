@@ -1,7 +1,7 @@
 {
   "version": "0.1.24",
   "date": "2026-10-28",
-  "distribution": "GitHub public release",
+  "distribution": "withdrawn pending privacy cleanup",
   "sourceSnapshotSha256": "73ad1322fc0ecd3bdac6797b20d8b842b630e8a31940809437ab1f4a5018a326",
   "unit": {
     "passed": 71,
@@ -73,7 +73,6 @@
     "桌面验证使用独立应用标识和隔离资料库；验证前端与正式前端 SHA256 一致，未在用户原目录安装。"
   ],
   "notes": [
-    "Installation executable is byte-for-byte identical to the tested local 0.1.24 installer.",
-    "Build source archive retains its original local-trial documentation; public docs are updated in the Git tag."
+    "Installation executable is unchanged. Public screenshots, example project and build-source archive have been removed."
   ]
 }

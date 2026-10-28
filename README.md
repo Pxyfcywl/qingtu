@@ -27,9 +27,7 @@
 - 超长完整内容可滚动或展开阅读；独立的 `---` 分隔线可用于手动分页。
 - 目录可收起，底部翻页控件自动淡出。首版暂不提供逐页人工合并与 PPTX 导出。
 
-![单卡片 Markdown 演示：双栏布局](docs/media/markdown-presentation.png)
-
-[演示使用指南](docs/markdown-presentation.md) · [下载演示体验项目](https://github.com/Pxyfcywl/qingtu/releases/download/v0.1.24/qingtu-0.1.24-presentation-example.qmap)
+[演示使用指南](docs/markdown-presentation.md)
 
 ## v0.1.23：在独立标签页编辑 Markdown 卡片
 
