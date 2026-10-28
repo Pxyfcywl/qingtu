@@ -1,0 +1,79 @@
+{
+  "version": "0.1.24",
+  "date": "2026-10-28",
+  "distribution": "GitHub public release",
+  "sourceSnapshotSha256": "73ad1322fc0ecd3bdac6797b20d8b842b630e8a31940809437ab1f4a5018a326",
+  "unit": {
+    "passed": 71,
+    "failed": 0
+  },
+  "relatedUI": {
+    "startTime": "2026-10-28T11:51:43.166Z",
+    "duration": 149245.10499999998,
+    "expected": 40,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0,
+    "files": [
+      "presentation.spec.ts",
+      "markdown-workspace.spec.ts",
+      "markdown-editor.spec.ts",
+      "mermaid.spec.ts",
+      "code-theme.spec.ts",
+      "editor-upgrade.spec.ts",
+      "list-indent.spec.ts",
+      "markdown-selection.spec.ts"
+    ]
+  },
+  "desktop": {
+    "version": "0.1.24",
+    "status": "passed",
+    "buildFlavor": "validation-debug",
+    "exeSha256": "f480c48231ce59b19320992b1f50889376f5cb5b382df04f5f8bf60b74a3c401",
+    "checks": [
+      "验证程序与正式安装包全部前端文件 SHA256 一致",
+      "使用独立应用标识和隔离资料库",
+      "按实际渲染高度生成多个演示页",
+      "只播放当前 MD 卡片",
+      "双栏完整同页显示且无垂直裁切",
+      "长正文续页继承标题和章节路径",
+      "跨页普通代码逐字符保留",
+      "图表和公式完成排版并适配页面",
+      "表格分页重复表头且内容适配页面",
+      "表格分页重复表头且内容适配页面",
+      "跨页表格所有数据行按原序完整保留",
+      "演示保留本地图片",
+      "视频可播放，翻页后释放播放器和媒体源",
+      "超长双栏完整保留并可展开阅读",
+      "关闭展开内容后留在原演示页",
+      "End 跳转最后一页",
+      "Home 返回第一页",
+      "桌面 WebView2 可进入系统全屏",
+      "窄窗口演示页面完整可见",
+      "退出后当前卡片原文与其它卡片均未改写"
+    ],
+    "frontendComparison": {
+      "identical": true,
+      "files": 84
+    },
+    "pageCount": 23
+  },
+  "production": {
+    "exeSha256": "456d70b0769aac1407538b78f61c3089e61cb3b9c97ea62e6a0780fc1bbab012",
+    "installer": {
+      "file": "qingtu-0.1.24-windows-x64-setup.exe",
+      "bytes": 3806763,
+      "sha256": "424cc4f31cd6ef44977e562e0a1365da602ce3137604dd53a6bb1437c46e68e5"
+    }
+  },
+  "limits": [
+    "本版仅播放当前卡片，不汇总整张导图，不生成或改写原文。",
+    "超长完整内容可能需要页内滚动或展开阅读，首版不支持人工逐页合并或 PPTX 导出。",
+    "相关界面回归按列出的文件执行，未声称全部历史用例、长期性能或干净系统安装通过。",
+    "桌面验证使用独立应用标识和隔离资料库；验证前端与正式前端 SHA256 一致，未在用户原目录安装。"
+  ],
+  "notes": [
+    "Installation executable is byte-for-byte identical to the tested local 0.1.24 installer.",
+    "Build source archive retains its original local-trial documentation; public docs are updated in the Git tag."
+  ]
+}

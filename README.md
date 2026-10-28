@@ -6,7 +6,7 @@
 
 本地桌面思维导图 · 富媒体内容卡片 · Windows x64
 
-[下载 v0.1.23](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.23) · [观看宣传片](https://github.com/pxyfcywl/qingtu/releases/download/v0.1.18/qingtu-0.1.18-promo.mp4) · [反馈问题](https://github.com/pxyfcywl/qingtu/issues)
+[下载 v0.1.24](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.24) · [观看宣传片](https://github.com/pxyfcywl/qingtu/releases/download/v0.1.18/qingtu-0.1.18-promo.mp4) · [反馈问题](https://github.com/pxyfcywl/qingtu/issues)
 
 [![轻图 0.1.18 宣传片：把灵感展开，让知识连接](docs/media/promo-preview.gif)](https://github.com/pxyfcywl/qingtu/releases/download/v0.1.18/qingtu-0.1.18-promo.mp4)
 
@@ -16,7 +16,20 @@
 
 轻图把思维导图和内容笔记放在同一张画布上。用节点梳理结构，用卡片写下推导、代码和详细笔记，把图片、公式与本地视频连接到你的思路里。
 
-**当前版本：v0.1.23 · Markdown 全页编辑与紧凑布局（2026-10-28）。** 本地资料保存在你选择的文件夹中，日常使用无需登录账号。
+**当前版本：v0.1.24 · 单卡片 Markdown 演示（2026-10-28）。** 本地资料保存在你选择的文件夹中，日常使用无需登录账号。
+
+## v0.1.24：把当前 Markdown 卡片作为幻灯片播放
+
+在 Markdown 全页编辑的顶部点击“演示”，按标题层级与实际内容高度生成 16:9 页面。只播放当前卡片，不使用 AI、不改写原文；退出后继续编辑。
+
+- 长正文延续原章节标题，显示章节路径与“续页”，支持目录跳转、方向键翻页和全屏。
+- 保留双栏、Mermaid、公式、本地图片与视频。段落、列表、普通代码和简单表格可拆页，表格续页重复表头。
+- 超长完整内容可滚动或展开阅读；独立的 `---` 分隔线可用于手动分页。
+- 目录可收起，底部翻页控件自动淡出。首版暂不提供逐页人工合并与 PPTX 导出。
+
+![单卡片 Markdown 演示：双栏布局](docs/media/markdown-presentation.png)
+
+[演示使用指南](docs/markdown-presentation.md) · [下载演示体验项目](https://github.com/Pxyfcywl/qingtu/releases/download/v0.1.24/qingtu-0.1.24-presentation-example.qmap)
 
 ## v0.1.23：在独立标签页编辑 Markdown 卡片
 
@@ -53,6 +66,7 @@
 | 思维导图 | Tab 添加子节点，Enter 添加同级节点，自动整理布局或自由拖动 |
 | 内容卡片 | 富文本、Markdown 粘贴、列表、公式、代码高亮和表格 |
 | Markdown 全页编辑 | 当前卡片独立标签页，即时编辑、源码、分屏和大纲，正文自动同步回卡片 |
+| Markdown 演示 | 当前卡片按标题和内容高度分页播放，支持续页、目录、键盘翻页和全屏 |
 | Mermaid 图表 | 在代码块中绘制流程图、时序图、饼图、思维导图、甘特图等，源码可继续编辑 |
 | 图片与视频 | 插入图片和本地 MP4；原图预览支持按鼠标位置缩放、拖动查看 |
 | 多级列表 | 正文 Tab / Shift+Tab 调整层级，显示 `1.`、`1.1`、`1.1.1` |
@@ -64,11 +78,11 @@
 
 ## 下载与安装
 
-前往 [v0.1.23 发布页](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.23)，下载 `qingtu-0.1.23-windows-x64-setup.exe`，按向导完成安装。首次启动时选择资料库存储位置。普通使用无需安装 Node.js、Rust 或 Python。
+前往 [v0.1.24 发布页](https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.24)，下载 `qingtu-0.1.24-windows-x64-setup.exe`，按向导完成安装。首次启动时选择资料库存储位置。普通使用无需安装 Node.js、Rust 或 Python。
 
 需要 Windows x64 和 WebView2。安装器在缺少 WebView2 时需要联网下载运行时。应用尚未进行商业代码签名。
 
-已有旧版的用户可下载 `qingtu-0.1.23-update.zip`，解压后运行 `覆盖更新.cmd`，选择原程序目录。更新前保存编辑并备份重要资料；程序目录与资料库分开存放。[详细安装与更新说明](docs/release/0.1.23-install.md)。
+已有旧版的用户可下载 `qingtu-0.1.24-update.zip`，解压后运行 `覆盖更新.cmd`，选择原程序目录。更新前保存编辑并备份重要资料；程序目录与资料库分开存放。[详细安装与更新说明](docs/release/0.1.24-install.md)。
 
 ## 从第一张导图开始
 
@@ -125,13 +139,13 @@ npm run tauri -- build
 
 ## 发布与验证
 
-v0.1.23 通过 **64 项单元测试、8 项全页编辑检查和 16 项独立桌面检查**，覆盖编辑同步、双栏与素材保留、保存重启、项目导入导出，以及导航和正文可用空间。
+v0.1.24 通过 **71 项单元测试、40 项相关界面回归和 20 项独立桌面检查**，覆盖当前卡片范围、分页与标题连续性、跨页代码与表格保留、双栏、图表、公式、媒体、全屏和退出后原文不变。相关界面回归范围见本版验证记录，未宣称全部历史界面用例通过。
 
-完整浏览器回归的 95 项用例初测为 **92 项通过、3 项未通过**。默认节点和视频进度用例复测通过；剩余的顶部拖线自动平移用例，在 0.1.22 归档源码与本版均于同一断言超时，作为既有问题保留。完整回归并非全部通过，详见[回归复测说明](docs/release/0.1.23-regressions.json)。
+上一公开版 0.1.23 的完整浏览器回归仍有顶部拖线用例断言超时；本版未重新执行完整历史回归，详见[既有回归记录](docs/release/0.1.23-regressions.json)。
 
-桌面验证使用独立应用标识与隔离资料库的调试构建；其 **82 个前端文件与正式构建逐一核对 SHA256，全部一致**。GitHub 安装程序沿用本次已验证的本地生产构建。
+桌面验证使用独立应用标识与隔离资料库的调试构建；其 **84 个前端文件与正式构建逐一核对 SHA256，全部一致**。GitHub 安装程序沿用本次已验证的本地生产构建。
 
-[本版验证记录](docs/release/0.1.23-verification.json) · [本版生产源码指纹](docs/release/0.1.23-source-fingerprint.json) · [更新记录](CHANGELOG.md)
+[本版验证记录](docs/release/0.1.24-verification.json) · [本版生产源码指纹](docs/release/0.1.24-source-fingerprint.json) · [更新记录](CHANGELOG.md)
 
 完整性能、长期内存和干净系统安装验收仍沿用既有未完成状态。宣传片来自 0.1.18 的演示资料，新版截图来自隔离桌面验证。
 

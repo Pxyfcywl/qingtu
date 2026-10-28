@@ -1,7 +1,7 @@
-import {useCallback,useEffect,useMemo,useRef,useState} from 'react';
+import {lazy,Suspense,useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {getSchema,type Editor} from '@tiptap/core';
-import {ArrowLeft,ListTree,Columns2,Code2,BookOpen} from 'lucide-react';
+import {ArrowLeft,ListTree,Columns2,Code2,BookOpen,Presentation} from 'lucide-react';
 import BodyEditor,{bodyExtensions} from './Editor';
 import {RichContent} from './RichContent';
 import type {MindNode,RichNode} from '../domain/types';
@@ -11,9 +11,11 @@ import {editDocument,getState,showError} from '../state';
 import '../styles-markdown.css';
 
 type Mode='rich'|'source'|'split';
+const MarkdownPresentation=lazy(()=>import('./MarkdownPresentation'));
 export default function MarkdownWorkspace({node,onReturn,toolbarContainer}:{node:MindNode;onReturn:()=>void;toolbarContainer:HTMLElement|null}){
   const [mode,setMode]=useState<Mode>('rich'),[source,setSource]=useState(()=>serializeMarkdownDocument(node.body)),[error,setError]=useState('');
   const [outlineVisible,setOutlineVisible]=useState(true);
+  const [presentation,setPresentation]=useState<RichNode|null>(null);
   const sourceRef=useRef(source),dirty=useRef(false),composing=useRef(false),lastBody=useRef(JSON.stringify(node.body)),docId=useRef(getState().doc!.id);
   const sourceField=useRef<HTMLTextAreaElement>(null),preview=useRef<HTMLDivElement>(null),editorRef=useRef<Editor|null>(null);
   const schema=useMemo(()=>getSchema(bodyExtensions()),[]);
@@ -63,6 +65,7 @@ export default function MarkdownWorkspace({node,onReturn,toolbarContainer}:{node
     const start=field.selectionStart,end=field.selectionEnd,insert='\n\n:::columns 3:2\n:::column\n左栏内容\n:::column\n右栏内容\n:::\n\n';
     changeSource(source.slice(0,start)+insert+source.slice(end));requestAnimationFrame(()=>{field.focus();field.setSelectionRange(start+insert.length,start+insert.length);});
   };
+  const present=()=>{try{commitDrafts();const body=getState().doc?.nodes[node.id]?.body;if(body)setPresentation(structuredClone(body));}catch(reason){showError(reason);}};
   return <section className="markdown-workspace" aria-label="Markdown 全页编辑" onKeyDown={event=>{
     if(event.nativeEvent.isComposing)return;
     if((event.ctrlKey||event.metaKey)&&event.key==='/'){event.preventDefault();switchMode(mode==='rich'?'source':'rich');}
@@ -71,7 +74,7 @@ export default function MarkdownWorkspace({node,onReturn,toolbarContainer}:{node
   }}>
     {toolbarContainer&&createPortal(<div className="markdown-navigation-controls" aria-label="Markdown 编辑导航">
       <div className="markdown-view-modes" aria-label="编辑视图">{([{id:'rich',label:'即时编辑',icon:BookOpen},{id:'source',label:'源码',icon:Code2},{id:'split',label:'分屏',icon:Columns2}] as const).map(({id,label,icon:Icon})=><button key={id} aria-pressed={mode===id} onClick={()=>switchMode(id)}><Icon size={15}/>{label}</button>)}</div>
-      <div className="markdown-view-actions"><button aria-label="切换本文大纲" title="切换本文大纲" aria-pressed={outlineVisible} onClick={()=>setOutlineVisible(!outlineVisible)}><ListTree size={17}/></button><button aria-label="返回导图" title="返回导图" onClick={onReturn}><ArrowLeft size={16}/><span>返回导图</span></button></div>
+      <div className="markdown-view-actions"><button aria-label="播放当前 Markdown" title="播放当前 Markdown" onClick={present}><Presentation size={17}/><span>演示</span></button><button aria-label="切换本文大纲" title="切换本文大纲" aria-pressed={outlineVisible} onClick={()=>setOutlineVisible(!outlineVisible)}><ListTree size={17}/></button><button aria-label="返回导图" title="返回导图" onClick={onReturn}><ArrowLeft size={16}/><span>返回导图</span></button></div>
     </div>,toolbarContainer)}
     <div className={`markdown-workspace-layout ${outlineVisible?'':'without-outline'}`}>
       {outlineVisible&&<aside className="markdown-outline"><h2>本文大纲</h2>{outline.length?outline.map((heading,index)=><button key={index} style={{paddingLeft:12+Math.min(heading.level-1,4)*12}} onClick={()=>jump(index)}>{heading.text}</button>):<p>输入标题后会显示在这里</p>}</aside>}
@@ -86,5 +89,6 @@ export default function MarkdownWorkspace({node,onReturn,toolbarContainer}:{node
         </>}
       </div>
     </div>
+    {presentation&&<Suspense fallback={null}><MarkdownPresentation body={presentation} title={node.title||'未命名卡片'} documentTitle={getState().doc?.title??''} onClose={()=>setPresentation(null)}/></Suspense>}
   </section>;
 }
