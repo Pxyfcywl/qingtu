@@ -1,7 +1,7 @@
 {
   "version": "0.1.24",
   "date": "2026-10-28",
-  "distribution": "withdrawn pending privacy cleanup",
+  "distribution": "GitHub public release",
   "sourceSnapshotSha256": "73ad1322fc0ecd3bdac6797b20d8b842b630e8a31940809437ab1f4a5018a326",
   "unit": {
     "passed": 71,
@@ -59,11 +59,12 @@
     "pageCount": 23
   },
   "production": {
-    "exeSha256": "456d70b0769aac1407538b78f61c3089e61cb3b9c97ea62e6a0780fc1bbab012",
+    "exeSha256": "48db584646881dc8d6589dbead22334abc88c816d58012b1e62a31875f642f9a",
+    "compilerPathRemapping": true,
     "installer": {
       "file": "qingtu-0.1.24-windows-x64-setup.exe",
-      "bytes": 3806763,
-      "sha256": "424cc4f31cd6ef44977e562e0a1365da602ce3137604dd53a6bb1437c46e68e5"
+      "bytes": 3806979,
+      "sha256": "5166f33a88f84197daf43bae6bc8819ae2a89dc1baae60d6b5f5e8e99ff4aca6"
     }
   },
   "limits": [
@@ -73,6 +74,15 @@
     "桌面验证使用独立应用标识和隔离资料库；验证前端与正式前端 SHA256 一致，未在用户原目录安装。"
   ],
   "notes": [
-    "Installation executable is unchanged. Public screenshots, example project and build-source archive have been removed."
-  ]
+    "Production installer was rebuilt with compiler path remapping; application source and all 84 frontend files are unchanged.",
+    "Existing functional results refer to the same application source and desktop-tested frontend. The path-remapped installer has been extracted and checked; it was not installed into the user application directory.",
+    "The five presentation UI cases were rerun after replacing the test fixture with a generic title; all passed."
+  ],
+  "privacyCleanup": {
+    "historyIdentities": "Project name and GitHub noreply address",
+    "withdrawn": "Private-project screenshots, example project and original build-source attachments; older installer/update attachments",
+    "applicationSourceUnchanged": true,
+    "frontendFilesIdentical": 84,
+    "binaryKnownIdentityAndLocalPathScan": "passed"
+  }
 }
