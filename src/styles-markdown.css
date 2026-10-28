@@ -1,0 +1,45 @@
+.markdown-workspace{height:100%;display:flex;flex-direction:column;background:#fff;min-width:0;color:var(--ink)}
+.markdown-topbar-controls{display:flex;align-items:center;justify-content:center;flex:1;min-width:0}
+.markdown-navigation-controls{display:flex;align-items:center;gap:18px;flex-shrink:0}
+.markdown-topbar .document-button{max-width:220px;min-width:0;flex-shrink:1}
+.markdown-view-modes{display:flex;align-items:center;padding:3px;border:1px solid var(--line);border-radius:8px;background:#f7fafb;gap:3px}
+.markdown-view-modes button,.markdown-view-actions button,.markdown-source-tools>button{display:flex;align-items:center;justify-content:center;gap:7px;border-radius:6px;padding:7px 12px;font-size:13px;white-space:nowrap}
+.markdown-view-modes button[aria-pressed=true]{background:#e7f5f1;color:#157f76;box-shadow:0 1px 3px #1d655a0a}
+.markdown-view-actions{display:flex;align-items:center;gap:8px}
+.markdown-view-actions button:hover,.markdown-source-tools>button:hover{background:#eef7f5;color:var(--teal)}
+.markdown-workspace-layout{display:grid;grid-template-columns:190px minmax(0,1fr);flex:1;min-height:0}
+.markdown-workspace-layout.without-outline{grid-template-columns:minmax(0,1fr)}
+.markdown-outline{padding:25px 15px;background:#f8fafb;border-right:1px solid var(--line);overflow:auto}
+.markdown-outline h2{font-size:12px;font-weight:500;color:#7b8c9e;margin:0 12px 18px}
+.markdown-outline button{display:block;width:100%;padding:8px 12px;border-radius:6px;text-align:left;overflow-wrap:anywhere;font-size:13px;color:#596e83}
+.markdown-outline button:hover,.markdown-outline button:focus-visible{background:#eaf6f2;color:var(--teal)}
+.markdown-outline p{font-size:12px;color:#8796a5;padding:0 12px}
+.markdown-workspace-document{min-width:0;min-height:0;display:flex;flex-direction:column;background:#fff}
+.markdown-workspace-document>.body-editor{flex:1;display:flex;flex-direction:column;min-height:0}
+.markdown-workspace-document .markdown-format-tools{position:relative;flex-shrink:0;display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding:12px 25px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#fff;box-shadow:none;width:auto}
+.markdown-workspace-document .markdown-format-tools select{border:1px solid #e2e9ec;background:#fff;border-radius:5px;max-width:180px;padding:4px;color:#52647c;font-size:12px}
+.markdown-workspace-document .markdown-format-tools button{width:auto;min-width:29px;height:29px;display:flex;align-items:center;justify-content:center;gap:5px;padding:5px;border-radius:5px;font-size:12px}
+.markdown-workspace-document .markdown-format-tools button.active{background:#eaf6f2;color:var(--teal)}
+.markdown-workspace-document .tiptap{outline:none;min-height:100%;padding:40px clamp(24px,5vw,90px) 100px;max-width:1100px;margin:0 auto;font-size:16px;line-height:1.85}
+.markdown-workspace-document .tiptap h1,.markdown-preview h1{font-size:30px;line-height:1.4;margin:0 0 24px}
+.markdown-workspace-document .tiptap h2,.markdown-preview h2{font-size:23px;line-height:1.5;margin:28px 0 15px}
+.markdown-workspace-document .tiptap h3,.markdown-preview h3{font-size:19px;line-height:1.6;margin:24px 0 12px}
+.markdown-workspace-document .tiptap h4,.markdown-preview h4{font-size:17px}
+.markdown-workspace-document .tiptap h5,.markdown-workspace-document .tiptap h6,.markdown-preview h5,.markdown-preview h6{font-size:16px}
+.markdown-workspace-document .body-editor>.tiptap,.markdown-workspace-document .body-editor>div:has(>.tiptap){flex:1;min-height:0;overflow:auto}
+.markdown-workspace-document .body-editor>div:has(>.tiptap)>.tiptap{overflow:visible}
+.markdown-source-tools{display:flex;align-items:center;gap:16px;flex-shrink:0;padding:8px 22px;border-bottom:1px solid var(--line);font-size:12px;color:#61758a}
+.markdown-source-tools details{position:relative}
+.markdown-source-tools summary{cursor:pointer}
+.markdown-source-tools details>div{position:absolute;top:30px;left:0;width:min(440px,60vw);padding:16px;background:#fff;border:1px solid var(--line);border-radius:9px;box-shadow:0 6px 22px #293d511c;z-index:5;line-height:1.8}
+.markdown-source-tools code{font-family:Consolas,monospace;color:#247d72}
+.markdown-source-layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr)}
+.markdown-source-layout.is-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.markdown-source-layout textarea{resize:none;border:0;outline-offset:-3px;padding:30px 36px;width:100%;height:100%;min-height:0;tab-size:2;background:#fcfdfd;font-family:Consolas,'Microsoft YaHei',monospace;font-size:14px;line-height:1.9;color:#33485d;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+.markdown-preview{min-height:0;overflow:auto;padding:30px;line-height:1.85;font-size:15px;border-left:1px solid var(--line)}
+.markdown-preview .rich-doc{max-width:100%;overflow-wrap:anywhere}
+.markdown-source-error{padding:10px 24px;background:#fff5e5;color:#96601b;font-size:12px;border-bottom:1px solid #eedbbd}
+.markdown-tab.active>button:first-child{color:var(--teal)}
+@media(max-width:1100px){.markdown-workspace-layout{grid-template-columns:160px minmax(0,1fr)}.markdown-topbar{gap:5px;padding:0 14px}.markdown-topbar .document-button{max-width:150px}.markdown-topbar .save-indicator{margin-left:0}.markdown-topbar .save-indicator span{display:none}.markdown-navigation-controls{gap:8px}.markdown-view-modes button{padding:6px 8px;font-size:12px}.markdown-view-modes button svg{display:none}.markdown-view-actions{gap:3px}.markdown-view-actions button{padding:6px 8px}.markdown-source-layout textarea{padding:24px}.markdown-preview{padding:24px}.markdown-workspace-document .markdown-format-tools{padding:10px 18px}}
+@media(max-width:950px){.markdown-topbar .document-button{max-width:120px}.markdown-topbar .brand-divider{margin:0 6px}.markdown-view-actions button span{display:none}}
+@media(max-width:760px){.markdown-workspace-layout{grid-template-columns:minmax(0,1fr)}.markdown-outline{display:none}.markdown-source-layout.is-split{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr)}.markdown-preview{border-left:0;border-top:1px solid var(--line)}.markdown-workspace-document .tiptap{padding:25px}}

@@ -1,6 +1,6 @@
-import { useCallback,useEffect,useState,useRef } from 'react';
+import { lazy,Suspense,useCallback,useEffect,useState,useRef } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
-import { GitBranch,Undo2,Redo2,Plus,PanelTop,ImagePlus,Film,Settings,FolderOpen,Download,ChevronDown,Check,LoaderCircle,LayoutGrid,MousePointer2,Maximize,Keyboard,X,Folder,ArrowRight,FilePlus2,Trash2,Search,ChevronRight,AlertCircle } from 'lucide-react';
+import { GitBranch,Undo2,Redo2,Plus,PanelTop,ImagePlus,Film,Settings,FolderOpen,Download,ChevronDown,Check,LoaderCircle,LayoutGrid,MousePointer2,Maximize,Keyboard,X,Folder,ArrowRight,FilePlus2,Trash2,Search,ChevronRight,AlertCircle,FileCode2 } from 'lucide-react';
 import { Canvas,canvasAction } from './components/Canvas';
 import { desktop,call,chooseDirectory,clearAssetUrls } from './bridge';
 import { useApp,patchState,showError,refreshLibrary,activateDocument,flushSave,createDocument,openDocument,showHome,closeDocumentTab,editDocument,undoCommand,redoCommand,getState,setDefaultNodeKind } from './state';
@@ -9,13 +9,15 @@ import {mediaFileKind} from './media-import';
 import LibraryHome from './components/LibraryHome';
 import type { LibraryInfo,MindDocument,MindNode,NodeKind } from './domain/types';
 import {kindLabels,planKindChange} from './domain/conversion';
-import { registerDraft,commitDrafts } from './editing';
+import { registerDraft,commitDrafts,openMarkdownCard } from './editing';
 import {cancelOperations,hasOperation} from './operations';
 import {version as appVersion} from '../package.json';
 import DefaultNodeKind from './components/DefaultNodeKind';
 import ParentsEditor from './components/ParentsEditor';
 import ImageViewer from './components/ImageViewer';
 import {installMarkdownSelection} from './components/markdown-selection';
+const MarkdownWorkspace=lazy(()=>import('./components/MarkdownWorkspace'));
+type MarkdownTab={documentId:string;nodeId:string;title:string};
 
 function Button({title,children,onClick,disabled=false,className=''}:{title:string;children:React.ReactNode;onClick:()=>void;disabled?:boolean;className?:string}) {
   return <button className={`tool-button ${className}`} title={title} aria-label={title} onClick={onClick} disabled={disabled}>{children}</button>;
@@ -26,6 +28,22 @@ export default function App() {
   const [inspector,setInspector]=useState(false);const [help,setHelp]=useState(false);const [storage,setStorage]=useState('');
   const [onboarding,setOnboarding]=useState(false);const [search,setSearch]=useState('');
   const [starting,setStarting]=useState(true);
+  const [markdownTabs,setMarkdownTabs]=useState<MarkdownTab[]>([]),[activeMarkdown,setActiveMarkdown]=useState<MarkdownTab|null>(null);
+  const [markdownToolbarContainer,setMarkdownToolbarContainer]=useState<HTMLDivElement|null>(null);
+  const markdownNode=activeMarkdown?.documentId===doc?.id?doc?.nodes[activeMarkdown!.nodeId]:undefined;
+  const markdownActive=markdownNode?.kind==='card';
+  const returnToMap=()=>{try{commitDrafts();setActiveMarkdown(null);patchState({selectedId:markdownNode?.id??getState().selectedId,editingId:null});}catch(error){showError(error);}};
+  const switchMarkdownTab=async(tab:MarkdownTab)=>{try{await flushSave();await openDocument(tab.documentId);if(getState().doc?.nodes[tab.nodeId]?.kind==='card')setActiveMarkdown(tab);}catch(error){showError(error);}};
+  useEffect(()=>{
+    const open=(event:Event)=>{try{commitDrafts();const current=getState().doc,id=(event as CustomEvent<string>).detail;if(!current||current.nodes[id]?.kind!=='card')return;
+      const tab={documentId:current.id,nodeId:id,title:current.nodes[id].title};setMarkdownTabs(tabs=>tabs.some(item=>item.documentId===current.id&&item.nodeId===id)?tabs:[...tabs,tab]);setActiveMarkdown(tab);setFiles(false);setInspector(false);patchState({selectedId:id,editingId:null,titleEditing:null});
+    }catch(error){showError(error);}};
+    window.addEventListener('qingtu-open-markdown',open);return()=>window.removeEventListener('qingtu-open-markdown',open);
+  },[]);
+  useEffect(()=>{
+    if(activeMarkdown&&(activeMarkdown.documentId!==doc?.id||!markdownActive))setActiveMarkdown(null);
+    setMarkdownTabs(tabs=>{const next=tabs.filter(tab=>library?.workspace?.openIds.includes(tab.documentId)&&(tab.documentId!==doc?.id||doc.nodes[tab.nodeId]?.kind==='card'));return next.length===tabs.length?tabs:next;});
+  },[doc?.id,doc?.nodes,library?.workspace?.openIds,activeMarkdown,markdownActive]);
   const [pendingConversion,setPendingConversion]=useState<{documentId:string;source:MindNode;plan:ReturnType<typeof planKindChange>}|null>(null);
   const conversionDialog=useRef<HTMLDialogElement>(null);
   useEffect(()=>{const dialog=conversionDialog.current;if(!pendingConversion||!dialog)return;dialog.showModal();dialog.querySelector<HTMLButtonElement>('.secondary-button')?.focus();return()=>{if(dialog.open)dialog.close();};},[pendingConversion]);
@@ -64,7 +82,7 @@ export default function App() {
       if(event.isComposing)return;
       if(document.querySelector('dialog[open]')){if((event.ctrlKey||event.metaKey)&&['s','z'].includes(event.key.toLowerCase()))event.preventDefault();return;}
       if(getState().busy){if(event.key==='Escape'&&(hasOperation('media-import')||hasOperation('png-export'))){cancelOperations();patchState({busy:'',error:'',notice:'操作已取消'});}event.preventDefault();return;}
-      const interactive=(event.target as HTMLElement).closest('input,textarea,select,button,a,[contenteditable="true"],[role="button"]');
+      const interactive=(event.target as HTMLElement).closest('input,textarea,select,button,a,[contenteditable="true"],[role="button"],.markdown-workspace');
       if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='s'){event.preventDefault();void flushSave().catch(showError);return;}
       if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='z'){event.preventDefault();event.shiftKey?redoCommand():undoCommand();return;}
       if(!getState().doc)return;
@@ -116,27 +134,28 @@ export default function App() {
   return <div className="app-shell" onCompositionStartCapture={()=>compositionActive.current=true} onCompositionEndCapture={()=>compositionActive.current=false}>
     <nav className="document-tabs" aria-label="已打开的思维导图" inert={!!state.busy}>
       <button className={`home-tab ${!doc?'active':''}`} onClick={()=>{setFiles(false);void showHome().catch(showError);}}><FolderOpen size={16}/>首页</button>
-      <div className="document-tab-list">{(library?.workspace?.openIds??[]).map(id=>{const item=library?.documents.find(item=>item.id===id);if(!item&&doc?.id!==id)return null;const title=doc?.id===id?doc.title:item!.title;return <div key={id} className={`document-tab ${doc?.id===id?'active':''}`}><button aria-label={`切换到 ${title}`} aria-current={doc?.id===id?'page':undefined} onClick={()=>{setFiles(false);void openDocument(id).catch(showError);}}><GitBranch size={15}/><span>{title}</span></button><button className="tab-close" aria-label={`关闭标签 ${title}`} title="关闭此标签（保留导图文件）" onClick={()=>void closeDocumentTab(id).catch(showError)}><X size={13}/></button></div>;})}</div>
+      <div className="document-tab-list">{(library?.workspace?.openIds??[]).map(id=>{const item=library?.documents.find(item=>item.id===id);if(!item&&doc?.id!==id)return null;const title=doc?.id===id?doc.title:item!.title;return <div key={id} className={`document-tab ${doc?.id===id&&!markdownActive?'active':''}`}><button aria-label={`切换到 ${title}`} aria-current={doc?.id===id&&!markdownActive?'page':undefined} onClick={()=>{try{commitDrafts();setFiles(false);setActiveMarkdown(null);void openDocument(id).catch(showError);}catch(error){showError(error);}}}><GitBranch size={15}/><span>{title}</span></button><button className="tab-close" aria-label={`关闭标签 ${title}`} title="关闭此标签（保留导图文件）" onClick={()=>void closeDocumentTab(id).catch(showError)}><X size={13}/></button></div>;})}
+      {markdownTabs.map(tab=>{const title=tab.documentId===doc?.id?doc.nodes[tab.nodeId]?.title:tab.title;const active=markdownActive&&activeMarkdown?.documentId===tab.documentId&&activeMarkdown.nodeId===tab.nodeId;return <div key={tab.documentId+':'+tab.nodeId} className={`document-tab markdown-tab ${active?'active':''}`}><button aria-label={`切换 Markdown ${title||'卡片'}`} aria-current={active?'page':undefined} onClick={()=>void switchMarkdownTab(tab)}><FileCode2 size={15}/><span>{title||'卡片'} · Markdown</span></button><button className="tab-close" aria-label={`关闭 Markdown ${title||'卡片'}`} onClick={()=>{try{commitDrafts();if(active)setActiveMarkdown(null);setMarkdownTabs(tabs=>tabs.filter(item=>item!==tab));}catch(error){showError(error);}}}><X size={13}/></button></div>;})}</div>
       <button className="new-map-tab" title="新建思维导图" aria-label="新建思维导图" onClick={()=>void createDocument().catch(showError)}><Plus size={18}/></button>
     </nav>
-    <header className="topbar">
+    <header className={`topbar ${markdownActive?'markdown-topbar':''}`}>
       <div className="brand"><GitBranch size={28}/><strong>轻图</strong><span className="brand-divider"/></div>
       <button className="document-button" onClick={()=>{setFiles(!files);void refreshLibrary().catch(showError);}}><span>{doc?.title??'让思路自然展开'}</span><ChevronDown size={16}/></button>
       {doc&&<button className={`save-indicator save-${state.saving}`} onClick={()=>void flushSave().catch(showError)} title="Ctrl+S 保存">{state.saving==='saved'?<Check size={13}/>:state.saving==='error'?<AlertCircle size={14}/>:<LoaderCircle className={state.saving==='saving'?'spin':''} size={14}/>}<span>{({saved:'已保存',dirty:'未保存',saving:'保存中',error:'保存失败'})[state.saving]}</span></button>}
-      <div className="topbar-spacer"/>
+      {markdownActive?<div ref={setMarkdownToolbarContainer} className="markdown-topbar-controls" inert={!!state.busy}/>:<><div className="topbar-spacer"/><Button disabled={!selected||selected.kind!=='card'} title="Markdown 全页编辑" onClick={()=>{if(selected)try{openMarkdownCard(selected.id);}catch(error){showError(error);}}}><FileCode2 size={18}/><span>Markdown 编辑</span></Button></>}
       <Button title="撤销 Ctrl+Z" onClick={undoCommand} disabled={!doc||!state.canUndo}><Undo2 size={19}/></Button>
       <Button title="重做 Ctrl+Shift+Z" onClick={redoCommand} disabled={!doc||!state.canRedo}><Redo2 size={19}/></Button>
       <span className="toolbar-divider"/>
-      <Button disabled={!doc} title="自动整理布局" onClick={()=>canvasAction('layout')}><LayoutGrid size={18}/><span>布局</span></Button>
+      {!markdownActive&&<Button disabled={!doc} title="自动整理布局" onClick={()=>canvasAction('layout')}><LayoutGrid size={18}/><span>布局</span></Button>}
       <div className="dropdown-wrap"><Button disabled={!doc} title="导出" onClick={()=>setExportMenu(!exportMenu)}><Download size={18}/><span>导出</span><ChevronDown size={13}/></Button>
-        {exportMenu&&<div className="dropdown-menu"><button onClick={()=>{setExportMenu(false);void exportProject();}}><Folder size={17}/>完整项目 .qmap<span>含原始媒体</span></button><button onClick={()=>{setExportMenu(false);void exportPng();}}><ImagePlus size={17}/>导图图片 .png<span>当前可见结构</span></button></div>}
+        {exportMenu&&<div className="dropdown-menu"><button onClick={()=>{setExportMenu(false);void exportProject();}}><Folder size={17}/>完整项目 .qmap<span>含原始媒体</span></button><button disabled={markdownActive} onClick={()=>{setExportMenu(false);void exportPng();}}><ImagePlus size={17}/>导图图片 .png<span>{markdownActive?'返回导图后导出':'当前可见结构'}</span></button></div>}
       </div>
       <Button title="设置" onClick={()=>setSettings(true)}><Settings size={18}/></Button>
     </header>
     {!desktop&&<div className="preview-label">开发预览 · 正式功能请使用桌面安装版</div>}
     <main className="workspace" inert={!!state.busy}>
-      <ReactFlowProvider>{doc?<Canvas key={doc.id} onMedia={onMedia} onPane={()=>{setExportMenu(false);}} onReady={ready}/>:!starting&&<LibraryHome/>}</ReactFlowProvider>
-      {doc&&<>
+      {markdownActive?<Suspense fallback={<div className="startup">正在打开 Markdown 编辑器…</div>}><MarkdownWorkspace key={doc!.id+':'+markdownNode.id} node={markdownNode} onReturn={returnToMap} toolbarContainer={markdownToolbarContainer}/></Suspense>:<ReactFlowProvider>{doc?<Canvas key={doc.id} onMedia={onMedia} onPane={()=>{setExportMenu(false);}} onReady={ready}/>:!starting&&<LibraryHome/>}</ReactFlowProvider>}
+      {doc&&!markdownActive&&<>
         <nav className="canvas-toolbar" aria-label="节点工具栏">
           <Button title="选择和拖动" onClick={()=>patchState({editingId:null})} className="active"><MousePointer2 size={20}/></Button>
           <span className="rail-divider"/>

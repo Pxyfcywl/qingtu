@@ -1,7 +1,7 @@
 import { useEditor,EditorContent } from '@tiptap/react';
 import { Node,mergeAttributes,type Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
-import { Bold,Italic,List,ListOrdered,Columns2,Sigma,ImagePlus,Film,Link,Check,Code2,Table2 } from 'lucide-react';
+import { Bold,Italic,List,ListOrdered,Columns2,Sigma,ImagePlus,Film,Link,Check,Code2,Table2,Maximize } from 'lucide-react';
 import { useEffect,useRef,useState } from 'react';
 import {TableKit} from '@tiptap/extension-table';
 import {DiagramCodeBlock} from './DiagramCodeBlock';
@@ -15,7 +15,7 @@ import { assetUrl } from '../bridge';
 import type { RichNode } from '../domain/types';
 import { validateBody } from '../domain/body';
 import { Plugin } from '@tiptap/pm/state';
-import { registerDraft,commitDrafts,takeBodyEditPoint } from '../editing';
+import { registerDraft,commitDrafts,takeBodyEditPoint,openMarkdownCard } from '../editing';
 import {startOperation} from '../operations';
 import {importLocalMedia,importMediaFile,mediaFileKind} from '../media-import';
 import {math,MathClipboard} from './MathExtension';
@@ -42,13 +42,17 @@ const AssetImage=Node.create({name:'assetImage',group:'block',atom:true,
     assetUrl(String(node.attrs.assetId),true).then(src=>{if(live)img.src=src;}).catch(()=>{dom.textContent='图片暂不可用';});
     return {dom,destroy(){live=false;}};};}});
 
-export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNode;scrollTop?:number}) {
+export const bodyExtensions=()=>[StarterKit.configure({undoRedo:false,codeBlock:false}),DiagramCodeBlock.configure({lowlight,enableTabIndentation:true}),TableKit.configure({table:{resizable:false},tableCell:false,tableHeader:false}),AlignedCell,AlignedHeader,FormattedPaste,ListNumbers,Columns,Column,math('mathBlock',false),math('mathInline',true),MathClipboard,AssetImage,Video];
+
+function InlineEditorTools({children}:{id:string;children:React.ReactNode}){return <div className="editor-tools markdown-format-tools" aria-label="正文格式工具栏" onMouseDown={event=>{if(!(event.target instanceof HTMLSelectElement))event.preventDefault();}}>{children}</div>;}
+export default function BodyEditor({id,body,scrollTop=0,fullPage=false,onFinish,onEditorReady}:{id:string;body:RichNode;scrollTop?:number;fullPage?:boolean;onFinish?:()=>void;onEditorReady?:(editor:Editor|null)=>void}) {
   const [entryPoint]=useState(()=>takeBodyEditPoint(id));const [,selectionTick]=useState(0);
   const [entryScroll]=useState(scrollTop);
   const originDoc=useRef(getState().doc?.id);
   const last=useRef(JSON.stringify(body));
   const dirty=useRef(false);
   const editorRef=useRef<Editor|null>(null);
+  const finishRef=useRef(onFinish);finishRef.current=onFinish;
   const composing=useRef(false),compositionTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
   const commit=(current:Editor)=>{
     if(current.isDestroyed||!dirty.current||getState().doc?.id!==originDoc.current||!getState().doc?.nodes[id])return;
@@ -56,10 +60,10 @@ export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNod
     validateBody(value);if(encoded.length>150000)throw new Error('正文较长，请拆分为多个节点');
     editDocument(doc=>{doc.nodes[id].body=value;},{history:true,group:'body:'+id});last.current=encoded;dirty.current=false;
   };
-  const finishEditing=()=>{const current=editorRef.current;if(!current)return;if(composing.current||current.view.composing){showError('请先确认输入法中的文字，再完成编辑');return;}try{commitDrafts();current.commands.blur();commit(current);patchState({editingId:null});}catch(error){showError(error);}};
-  const editor=useEditor({extensions:[StarterKit.configure({undoRedo:false,codeBlock:false}),DiagramCodeBlock.configure({lowlight,enableTabIndentation:true}),TableKit.configure({table:{resizable:false},tableCell:false,tableHeader:false}),AlignedCell,AlignedHeader,FormattedPaste,ListNumbers,Columns,Column,math('mathBlock',false),math('mathInline',true),MathClipboard,AssetImage,Video],
+  const finishEditing=()=>{const current=editorRef.current;if(!current)return;if(composing.current||current.view.composing){showError('请先确认输入法中的文字，再完成编辑');return;}try{commitDrafts();current.commands.blur();commit(current);if(finishRef.current)finishRef.current();else patchState({editingId:null});}catch(error){showError(error);}};
+  const editor=useEditor({extensions:bodyExtensions(),
     content:body,autofocus:false,editorProps:{attributes:{class:'rich-doc editor-content nodrag nopan nowheel'},
-      handleScrollToSelection(view){const rect=revealEditorCaret(view);window.dispatchEvent(new CustomEvent('qingtu-reveal-caret',{detail:{docId:originDoc.current,rect}}));return true;},
+      handleScrollToSelection(view){if(fullPage)return false;const rect=revealEditorCaret(view);window.dispatchEvent(new CustomEvent('qingtu-reveal-caret',{detail:{docId:originDoc.current,rect}}));return true;},
       handleKeyDown(_view,event){
         if(event.key==='Escape'&&!event.isComposing){finishEditing();return true;}
         const current=editorRef.current;
@@ -94,6 +98,7 @@ export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNod
     onUpdate({editor}) {dirty.current=true;if(!composing.current&&!editor.view.composing)try{commit(editor);}catch(error){showError(error);}},
   },[id]);
   editorRef.current=editor;
+  useEffect(()=>{onEditorReady?.(editor);return()=>onEditorReady?.(null);},[editor,onEditorReady]);
   useEffect(()=>{
     if(!editor)return;
     let remove:(()=>void)|undefined;
@@ -120,11 +125,11 @@ export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNod
   useEffect(()=>{
     if(!editor)return;const frame=requestAnimationFrame(()=>{if(editor.isDestroyed)return;
       const pane=editor.view.dom.closest('.card-body');if(pane)pane.scrollTop=entryScroll;
-      const position=entryPoint?editor.view.posAtCoords({left:entryPoint.x,top:entryPoint.y})?.pos:editor.state.doc.content.size;
+      const position=fullPage?0:entryPoint?editor.view.posAtCoords({left:entryPoint.x,top:entryPoint.y})?.pos:editor.state.doc.content.size;
       if(position!==undefined)editor.view.dispatch(editor.state.tr.setSelection(TextSelection.near(editor.state.doc.resolve(position))));
       editor.view.focus();
     });return()=>cancelAnimationFrame(frame);
-  },[editor,entryPoint,entryScroll]);
+  },[editor,entryPoint,entryScroll,fullPage]);
   useEffect(()=>{
     if(!editor)return;
     const remove=registerDraft('body:'+id,{commit:()=>commit(editor),composing:()=>composing.current||(!editor.isDestroyed&&editor.view.composing)});
@@ -161,8 +166,10 @@ export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNod
     finally{if(operation.isCurrent()&&getState().busy==='正在导入本地媒体…')patchState({busy:''});operation.finish();}
   }
   const button=(label:string,icon:React.ReactNode,action:()=>void,active=false)=><button type="button" title={label} aria-label={label} className={active?'active':''} onClick={action}>{icon}</button>;
+  const Tools=fullPage?InlineEditorTools:FloatingEditorTools;
   return <div className="body-editor nodrag nopan nowheel" onKeyDown={e=>{if(!(e.ctrlKey||e.metaKey))e.stopPropagation();}} onPointerDown={e=>e.stopPropagation()}>
-    <FloatingEditorTools id={id}>
+    <Tools id={id}>
+      {fullPage&&<select aria-label="段落格式" value={editor.isActive('heading')?editor.getAttributes('heading').level:0} onChange={event=>{const level=Number(event.target.value);if(level)editor.chain().focus().setHeading({level:level as 1|2|3|4|5|6}).run();else editor.chain().focus().setParagraph().run();}}><option value="0">正文</option>{[1,2,3,4,5,6].map(level=><option key={level} value={level}>标题 {level}</option>)}</select>}
       {button('粗体',<Bold size={15}/>,()=>editor.chain().focus().toggleBold().run(),editor.isActive('bold'))}
       {button('斜体',<Italic size={15}/>,()=>editor.chain().focus().toggleItalic().run())}
       {button('无序列表',<List size={16}/>,()=>editor.chain().focus().toggleBulletList().run())}
@@ -177,9 +184,10 @@ export default function BodyEditor({id,body,scrollTop=0}:{id:string;body:RichNod
       {button('插入图片',<ImagePlus size={16}/>,()=>void insertMedia('image'))}
       {button('插入视频',<Film size={16}/>,()=>void insertMedia('video'))}
       {button('添加链接',<Link size={15}/>,()=>{const href=window.prompt('输入链接地址（https://）','https://');if(href&&/^https?:\/\//i.test(href))editor.chain().focus().setLink({href}).run();})}
+      {!fullPage&&button('全页编辑卡片',<Maximize size={16}/>,()=>openMarkdownCard(id))}
       {button('完成编辑',<Check size={16}/>,finishEditing)}
-    </FloatingEditorTools>
+    </Tools>
     <EditorContent editor={editor}/>
-    <div className="editor-hint">代码块可选择 Mermaid 图表，或粘贴 ```mermaid 围栏代码 · 列表 Tab 缩进 / Shift+Tab 提升 · Esc 完成编辑</div>
+    {!fullPage&&<div className="editor-hint">代码块可选择 Mermaid 图表，或粘贴 ```mermaid 围栏代码 · 列表 Tab 缩进 / Shift+Tab 提升 · Esc 完成编辑</div>}
   </div>;
 }

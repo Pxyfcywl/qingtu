@@ -1,0 +1,132 @@
+{
+  "version": "0.1.23",
+  "date": "2026-10-28",
+  "distribution": "github-release",
+  "sourceSnapshotSha256": "b6ffd433c74549f557248777404caaab7aedce1bfd3c629e116b7daa129fe11b",
+  "build": {
+    "command": "npm run tauri -- build --bundles nsis --config src-tauri/tauri.tools.conf.json",
+    "status": "passed",
+    "productionExeSha256": "990e3a0480488afa2785fa64c1e084d4885fffc25e2d5a58d1375281a401a10e"
+  },
+  "unit": {
+    "passed": 64,
+    "failed": 0
+  },
+  "fullUI": {
+    "startTime": "2026-10-28T09:08:47.905Z",
+    "duration": 354657.631,
+    "expected": 92,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  },
+  "finalFeatureUI": {
+    "startTime": "2026-10-28T09:08:01.804Z",
+    "duration": 44167.424,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "desktop": {
+    "status": "passed",
+    "buildFlavor": "validation-debug",
+    "exeSha256": "101ce8b5fe5b3b500e3e8904bd7c8bee238420f267236cf870b123d286877462",
+    "frontendComparison": {
+      "identical": true,
+      "files": 82
+    },
+    "checks": [
+      "独立验证程序与正式安装包的全部前端文件 SHA256 一致",
+      "测试程序使用独立配置和资料库，未访问用户原资料库",
+      "当前卡片在独立标签页打开，编辑区无右侧卡片同步预览",
+      "即时编辑保留双栏和本地图片",
+      "编辑视图和返回按钮位于主导航栏，重复标题行已删除，正文向上扩展",
+      "底部操作提示和状态栏已移除，正文滚动区域延伸到窗口底部",
+      "源码提供双栏扩展并保留本地素材与 Mermaid",
+      "分屏实时排版使用更新后的卡片数据",
+      "即时编辑与源码修改均同步到原卡片并保存 SQLite",
+      "编辑当前卡片不会串改另一张卡片",
+      "实际保存保留原素材标识和双栏比例",
+      "未完成扩展语法保留草稿并阻止离页",
+      "完整退出重启后卡片正文和素材引用一致",
+      "导出再导入 qmap 保留编辑结果、双栏、公式和素材",
+      "窄桌面窗口布局无页面溢出",
+      "最小桌面窗口的主导航控件保持单行且不重叠"
+    ],
+    "windowLayout": {
+      "bottom": 900,
+      "height": 900,
+      "scrollWidth": 1250,
+      "width": 1250
+    },
+    "minimumWindow": {
+      "leftGap": 73.20001220703125,
+      "overflow": 0,
+      "rightGap": 73.19998168945312,
+      "width": 900
+    }
+  },
+  "installer": {
+    "file": "qingtu-0.1.23-windows-x64-setup.exe",
+    "bytes": 3798639,
+    "sha256": "c9529d44c0261e6342d5022e3b7b2f9816822a4f5a063a75b82d64f0c86afca5"
+  },
+  "limits": [
+    "桌面验证使用独立应用标识、隔离资料库的调试构建，其 82 个前端文件与正式构建逐项 SHA256 一致；未在用户原程序目录执行安装。",
+    "本次包含现有全部浏览器用例与新增功能复测，不代表干净系统安装、全部长期性能和内存验收已完成。",
+    "源码模式通过扩展语法与保留块表示双栏、本地媒体和复杂格式，未承诺完整兼容 Typora 全部语法。",
+    "完整界面回归存在 1 项已在旧版同样复现的拖线自动化断言超时；请参阅回归复测说明，不应解读为全部界面用例通过。"
+  ],
+  "regressionFollowUp": {
+    "rerunStats": {
+      "startTime": "2026-10-28T09:16:35.423Z",
+      "duration": 54528.84299999999,
+      "expected": 11,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "recovered": [
+      "default-node-kind.spec.ts:默认类型单选、跨重载保存，可在设置中取消并恢复文字默认",
+      "playback-resources.spec.ts:切换播放释放前一个视频源，返回时保留播放进度"
+    ],
+    "knownExisting": [
+      "home-tabs-connect.spec.ts:向上拖线经过工具栏、标签栏及窗口上沿持续平移，回到画布可连接并停止"
+    ],
+    "baselineVersion": "0.1.22",
+    "baselineSourceSnapshotSha256": "2d5639e0050b45458c9b5a935db16d97e6e3cd3981d80e1536d30b59d256fcd0",
+    "baselineStats": {
+      "startTime": "2026-10-28T09:20:43.456Z",
+      "duration": 15849.427000000001,
+      "expected": 0,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "isolatedCurrentStats": {
+      "startTime": "2026-10-28T09:19:38.269Z",
+      "duration": 24271.714,
+      "expected": 0,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "conclusion": "默认节点与视频用例复测通过；顶部拖线用例在 0.1.22 归档源码和本版均在相同断言超时，作为既有问题记录。完整回归并非全绿。"
+  },
+  "publication": {
+    "repository": "Pxyfcywl/qingtu",
+    "tag": "v0.1.23",
+    "releaseUrl": "https://github.com/Pxyfcywl/qingtu/releases/tag/v0.1.23",
+    "originalBuildVerification": {
+      "file": "qingtu-0.1.23-build-verification.json",
+      "sha256": "8c12190fdf90a558f94466e19d8a908da1dc1f15eab7c5ae71dadf9f09f5b6bd"
+    },
+    "buildSourceArchive": {
+      "file": "qingtu-0.1.23-build-source.zip",
+      "sha256": "9e7efe4aa929279666afae4eb24e7010641345fd31d1669a5897d2dc1e1d2b81",
+      "note": "原始构建源码快照保留封存时文档，标签中的文档已更新为公开发布说明。"
+    },
+    "installerUnchanged": true
+  }
+}

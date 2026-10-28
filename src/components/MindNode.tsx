@@ -1,9 +1,9 @@
 import { lazy,Suspense,memo,useRef,useEffect,useLayoutEffect,useState } from 'react';
 import { Handle,Position,NodeResizer,type NodeProps,type Node } from '@xyflow/react';
-import { ChevronDown,ChevronUp,GraduationCap,BookOpen,Triangle,Plus,Image as ImageIcon,Film,Sigma,List } from 'lucide-react';
+import { ChevronDown,ChevronUp,GraduationCap,BookOpen,Triangle,Plus,Image as ImageIcon,Film,Sigma,List,Maximize } from 'lucide-react';
 import type { MindNode as Item } from '../domain/types';
 import { editDocument,getState,patchState,useAppValue,showError } from '../state';
-import { registerDraft,commitDrafts,recordBodyEditPoint } from '../editing';
+import { registerDraft,commitDrafts,recordBodyEditPoint,openMarkdownCard } from '../editing';
 import { RichContent } from './RichContent';
 import { EmptyImage,ImageAsset,VideoAsset } from './Media';
 import {beginChildConnection} from './ParentConnector';
@@ -58,7 +58,7 @@ export const MindNode=memo(function MindNode({data,selected}:NodeProps<FlowNode>
     {selected&&!editing&&!titleEditing&&<button className="parent-connect-point nodrag nopan" aria-label="连接到子节点" title="拖到已有子节点，或点击后选择子节点 · Ctrl+Shift+L；靠近画布边缘自动平移" onPointerDown={event=>{if(event.button!==0)return;event.preventDefault();event.stopPropagation();beginChildConnection(item.id,event);}} onClick={event=>{event.preventDefault();event.stopPropagation();if(event.detail===0)beginChildConnection(item.id,{clientX:event.currentTarget.getBoundingClientRect().x+9,clientY:event.currentTarget.getBoundingClientRect().y+9});}}><span/></button>}
     {item.kind==='text'&&<div className="text-node drag-handle">{label}</div>}
     {item.kind==='card'&&<>
-      <header className="card-header drag-handle">{label}<button className="body-toggle nodrag" onClick={event=>{event.stopPropagation();toggleBody();}} aria-label={item.contentCollapsed?'展开正文':'收起正文'} aria-expanded={!item.contentCollapsed} title="仅展开或收起卡片正文">{item.contentCollapsed?<ChevronDown size={19}/>:<ChevronUp size={19}/>}</button></header>
+      <header className="card-header drag-handle">{label}<button className="card-fullpage-button nodrag" title="全页编辑卡片" aria-label="全页编辑卡片" onClick={event=>{event.stopPropagation();try{openMarkdownCard(item.id);}catch(error){showError(error);}}}><Maximize size={15}/></button><button className="body-toggle nodrag" onClick={event=>{event.stopPropagation();toggleBody();}} aria-label={item.contentCollapsed?'展开正文':'收起正文'} aria-expanded={!item.contentCollapsed} title="仅展开或收起卡片正文">{item.contentCollapsed?<ChevronDown size={19}/>:<ChevronUp size={19}/>}</button></header>
       {!item.contentCollapsed&&<div ref={bodyRef} className="card-body nodrag nowheel nopan" style={editing?{minHeight:`min(${editingHeight}px,clamp(220px,60vh,560px))`}:undefined} onScroll={event=>{if(!exporting)bodyScroll.current=event.currentTarget.scrollTop;}} onDoubleClick={event=>{event.stopPropagation();if(!editing)beginBodyEditing({x:event.clientX,y:event.clientY});}}>
         {editing?<Suspense fallback={<div className="editor-loading" style={{minHeight:loadingHeight}}>正在打开编辑器…</div>}><BodyEditor id={item.id} body={item.body} scrollTop={editingScroll}/></Suspense>:<RichContent body={item.body}/>}
         {!editing&&<footer className="card-insert-tools"><button title="编辑正文" aria-label="编辑卡片正文" onClick={event=>{event.stopPropagation();beginBodyEditing();}}><ImageIcon size={17}/><Film size={17}/><Sigma size={18}/><List size={18}/><span>双击编辑</span></button></footer>}

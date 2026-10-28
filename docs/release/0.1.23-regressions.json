@@ -1,0 +1,36 @@
+{
+  "rerunStats": {
+    "startTime": "2026-10-28T09:16:35.423Z",
+    "duration": 54528.84299999999,
+    "expected": 11,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "recovered": [
+    "default-node-kind.spec.ts:默认类型单选、跨重载保存，可在设置中取消并恢复文字默认",
+    "playback-resources.spec.ts:切换播放释放前一个视频源，返回时保留播放进度"
+  ],
+  "knownExisting": [
+    "home-tabs-connect.spec.ts:向上拖线经过工具栏、标签栏及窗口上沿持续平移，回到画布可连接并停止"
+  ],
+  "baselineVersion": "0.1.22",
+  "baselineSourceSnapshotSha256": "2d5639e0050b45458c9b5a935db16d97e6e3cd3981d80e1536d30b59d256fcd0",
+  "baselineStats": {
+    "startTime": "2026-10-28T09:20:43.456Z",
+    "duration": 15849.427000000001,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "isolatedCurrentStats": {
+    "startTime": "2026-10-28T09:19:38.269Z",
+    "duration": 24271.714,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "conclusion": "默认节点与视频用例复测通过；顶部拖线用例在 0.1.22 归档源码和本版均在相同断言超时，作为既有问题记录。完整回归并非全绿。"
+}

@@ -3,6 +3,7 @@ const drafts=new Map<string,Draft>();
 const bodyPoints=new Map<string,{x:number;y:number}>();
 export function recordBodyEditPoint(id:string,point:{x:number;y:number}){bodyPoints.set(id,point);}
 export function takeBodyEditPoint(id:string){const point=bodyPoints.get(id);bodyPoints.delete(id);return point;}
+export function openMarkdownCard(id:string){commitDrafts();window.dispatchEvent(new CustomEvent('qingtu-open-markdown',{detail:id}));}
 export function registerDraft(id:string,draft:Draft){drafts.set(id,draft);return()=>{if(drafts.get(id)===draft)drafts.delete(id);};}
 export function hasComposingDraft(){return [...drafts.values()].some(draft=>draft.composing());}
 export function commitDrafts(){

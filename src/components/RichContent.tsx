@@ -25,7 +25,7 @@ function render(node: RichNode,key: string,numbers:Record<string,string>): React
       return <span key={key}>{text}</span>;
     }
     case 'paragraph':return <p key={key}>{children??<br/>}</p>;
-    case 'heading':return <h3 key={key}>{children}</h3>;
+    case 'heading':{const Tag=(`h${Math.max(1,Math.min(6,Number(node.attrs?.level??1)))}`) as 'h1'|'h2'|'h3'|'h4'|'h5'|'h6';return <Tag key={key}>{children}</Tag>;}
     case 'bulletList':return <ul key={key}>{children}</ul>;
     case 'orderedList':return <ol key={key} start={orderedStart(node.attrs?.start)}>{children}</ol>;
     case 'listItem':return <li key={key} data-list-number={numbers[key]}>{children}</li>;

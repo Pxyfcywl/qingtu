@@ -6,4 +6,5 @@
 .node-card{container-type:inline-size}
 .exporting .mind-node.is-selected{outline:0!important}
 .node-image>.media-placeholder{max-height:500px}.asset-image{object-fit:contain}
+.card-fullpage-button{display:grid;place-items:center;min-height:30px;min-width:30px;border-radius:6px;color:#62758a;padding:0;flex-shrink:0}.card-fullpage-button:hover{background:color-mix(in srgb,var(--branch) 15%,white)}
 .editor-content .math-inline.editor-math{padding:1px 3px;border-radius:3px}.editor-content .math-block.editor-math{margin:8px 0}.editor-math .katex-display{margin:.35em 0}.editor-math.ProseMirror-selectednode{outline:2px solid #65b7a6;outline-offset:2px}
